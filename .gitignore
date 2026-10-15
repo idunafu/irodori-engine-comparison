@@ -218,6 +218,22 @@ tempCodeRunnerFile.py
 /cache/
 /TYC054.wav
 
+# Local scratch files and editor backups
+/tmp/
+/temp/
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Detailed profiler output and duplicate aggregates belong under artifacts/.
+# Keep published reports, primary CSV tables, figures, and validation metadata.
+/benchmark/results/**/operators.csv
+/benchmark/results/**/summary.json
+/benchmark/results/**/*.trace.json
+/benchmark/results/**/*.jsonl
+
 # PyPI configuration file
 .pypirc
 

@@ -1,0 +1,32 @@
+{
+  "torch": {
+    "version": "2.14.1",
+    "requires_python": ">=3.10",
+    "source": "https://pypi.org/pypi/torch/json"
+  },
+  "torchaudio": {
+    "version": "2.11.0",
+    "requires_python": null,
+    "source": "https://pypi.org/pypi/torchaudio/json"
+  },
+  "torchcodec": {
+    "version": "0.17.0",
+    "requires_python": ">=3.10",
+    "source": "https://pypi.org/pypi/torchcodec/json"
+  },
+  "onnx": {
+    "version": "1.23.2",
+    "requires_python": ">=3.10",
+    "source": "https://pypi.org/pypi/onnx/json"
+  },
+  "onnxruntime-gpu": {
+    "version": "1.31.0",
+    "requires_python": ">=3.11",
+    "source": "https://pypi.org/pypi/onnxruntime-gpu/json"
+  },
+  "onnxscript": {
+    "version": "0.7.2",
+    "requires_python": ">=3.9",
+    "source": "https://pypi.org/pypi/onnxscript/json"
+  }
+}

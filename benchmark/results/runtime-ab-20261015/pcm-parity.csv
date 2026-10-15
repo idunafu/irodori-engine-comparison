@@ -1,0 +1,9 @@
+case,relative_error,max_abs,bit_equal
+Irodori-TTS-rf-cuda-fp32,5.214311386225745e-06,9.134411811828613e-06,False
+Irodori-TTS-rf-cuda-practical,0.5608571767807007,1.2637566328048706,False
+Irodori-TTS-mf-cuda-fp32,6.417240911105182e-06,1.1652708053588867e-05,False
+Irodori-TTS-mf-cuda-practical,0.023594383150339127,0.056222930550575256,False
+Irodori-TTS-Optimiz-rf-cuda-fp32,4.958596377946378e-07,1.0728836059570312e-06,False
+Irodori-TTS-Optimiz-rf-cuda-practical,0.6870117783546448,1.20381498336792,False
+irodori-onnx-mf-cuda-fp32,1.5452138541149907e-05,2.6911497116088867e-05,False
+irodori-onnx-mf-cuda-practical,0.01763533242046833,0.039306640625,False

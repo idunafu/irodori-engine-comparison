@@ -143,16 +143,36 @@ benchmark/.venv/bin/python benchmark/speech_ab_validate.py
 
 このA/Bアダプターは上記コミットを対象とします。別コミットで上流APIや入れ子のggmlが変わった場合は、アダプターと計測パッチの調整が必要です。
 
+## PyTorch／ONNX Runtime更新のA/B比較
+
+主比較を構築済みの環境で実行します。元のvenv・lock・エンジン・モデル・主比較の生データは更新しません。
+
+```bash
+source scripts/environment.sh
+python3 benchmark/runtime_ab_setup.py
+benchmark/.venv/bin/python benchmark/runtime_ab_provenance.py
+benchmark/.venv/bin/python benchmark/runtime_ab.py
+benchmark/.venv/bin/python benchmark/runtime_ab_validate.py
+```
+
+専用環境は`.venvs/runtime-ab-20261015/`、生データ・依存バージョン・コマンド・モデルハッシュは`artifacts/runtime-ab-20261015/`、公開結果は`benchmark/results/runtime-ab-20261015/`に保存します。2026-10-15に公式配布元の最新安定版を照会し、`environments/runtime-ab-20261015/versions.json`に固定しました。全依存の実測freezeも同じディレクトリのrequirementsへ保存しています。PyTorchのCUDA runtimeは13.0です。Python 3.10用の最新版ONNX Runtime wheelがないため、ONNX環境は3.11を使います。
+
+`--preflight-only`でPCM・計測の事前検証のみ、`--report-only`で集計のみを実行できます。測定は完了した要求単位で再開できます。新旧の依存一覧と元環境のRECORD・設定のハッシュを保存し、最後に一致を検証します。ONNXグラフは再exportせず、同じRust実行ファイルで共有ライブラリだけを切り替えます。ONNX／ONNXScript最新版も専用環境へ導入しますが、推論速度の比較対象はONNX Runtimeです。
+
+小規模比較は短文・長文、2秒・8秒、両キャッシュ、FP32・実用精度です。3ラウンドで順序を交互にし、差が同方向で再現して階層bootstrap 95%区間が0を跨がないエンジン・モデル・精度を本測定へ拡張します。本測定は主比較と同じ全20文章のmatched／auto／text_scalingおよび2・4・8・16・24秒のaudio_scaling、新旧両版・両キャッシュ、各条件warmup 2回・通常5回・詳細5回です。
+
 ## 保存先
 
 | 場所 | 内容 | Git管理 |
 |---|---|---|
 | `engines/` | 固定した7実装と入れ子のsubmodule | 対象 |
 | `engines.lock.json`／`models.lock.json` | ソースSHA・モデルrevision | 対象 |
-| `environments/onnx/`／`benchmark/uv.lock` | Python依存定義・lock | 対象 |
+| `environments/`／`benchmark/uv.lock` | Python依存定義・lock・A/B用の固定requirements | 対象 |
 | `benchmark/config.json`／`benchmark/prompts.json` | 共通条件・入力文章 | 対象 |
 | `benchmark/patches/` | 計測用パッチ | 対象 |
 | `benchmark/results/` | 集計CSV・グラフ・日本語レポート | 対象 |
+| `artifacts/runtime-ab-20261015/`／`artifacts/mf-runtime-cause-20261015/` | Runtime A/Bの生データ・GPUトレース・依存freeze・監視ログ | 対象外 |
+| `artifacts/mf-runtime-cause-20261015/report/` | 大きい演算別CSV・公開CSVと重複する集計JSON | 対象外 |
 | `.venvs/`／`benchmark/.venv/` | 分離したPython環境 | 対象外 |
 | `toolchains/`／`.cache/`／`cache/` | ローカルSDK・各種キャッシュ | 対象外 |
 | `models/` | 固定revisionのモデル | 対象外 |
@@ -168,3 +188,5 @@ benchmark/.venv/bin/python benchmark/speech_ab_validate.py
 | `logs/`／`artifacts/*results.json`／`artifacts/environment.json` | 構築・単体確認ログと環境記録 | 対象外 |
 
 `telemetry.jsonl`の1秒間隔の補助記録と、VRAMの10ms間隔の観測は別です。生データ・環境記録には実行時のパスなどを含むため、公開用の集計ファイルと分けて扱います。
+
+コミットには再現用コード・依存定義と、`benchmark/results/`のレポート・主要CSV・図・検証結果を含めます。仮想環境、キャッシュ、モデル、ログ、生データ、一時ファイルは`.gitignore`で除外します。旧版の集計処理が`benchmark/results/`へ出力する`operators.csv`、`summary.json`、GPUトレース、JSONLも除外します。

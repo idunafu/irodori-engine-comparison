@@ -1,0 +1,25 @@
+{
+  "preserved": true,
+  "preserved_files": 1164,
+  "records": 2086,
+  "measurements": 68,
+  "model_and_reference_preserved": true,
+  "normal": 1296,
+  "profiles": 720,
+  "conv_processes": 18,
+  "telemetry_samples": 880,
+  "concurrent_compute_samples": 0,
+  "temperature_range": [
+    48,
+    70
+  ],
+  "pcm_max_relative_l2": 0.4929814338684082,
+  "codec_max_relative_l2": 1.2723367035505362e-06,
+  "fp32_max_relative_l2": 7.724227543803863e-06,
+  "bf16_max_relative_l2": 0.4929814338684082,
+  "inputs": {
+    "latent-2.pt": "d9e66ff617277e86058dd808321c94a19e5b33fe02791ff46873e1faaf8db387",
+    "latent-8.pt": "d764b91e1f85b625e17f3e3dcc0db09bc9d72f14f1bf1873da7762a9d77f4ede",
+    "latent-24.pt": "d47ad0d70fc7314b961146007ddb0454e6bd22fd287e42667ac2db81d914ce25"
+  }
+}

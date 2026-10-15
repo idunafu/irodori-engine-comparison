@@ -1,0 +1,18 @@
+{
+  "old924": {
+    "removed": [
+      "nvidia-cudnn-cu12==9.10.2.21"
+    ],
+    "added": [
+      "nvidia-cudnn-cu12==9.24.0.43"
+    ]
+  },
+  "cudnn9241": {
+    "removed": [
+      "nvidia-cudnn-cu13==9.24.0.43"
+    ],
+    "added": [
+      "nvidia-cudnn-cu13==9.24.1.1"
+    ]
+  }
+}

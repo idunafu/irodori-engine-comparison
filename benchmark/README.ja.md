@@ -8,5 +8,7 @@
 - [測定条件・指標の定義・精度の注意点](../docs/methodology.ja.md)
 - [主比較の結果：表とグラフ](results/RESULTS.ja.md)
 - [speech.cppのコミット間A/B比較](results/speech-ab-6bd7b027/RESULTS.ja.md)
+- [PyTorch／ONNX Runtime更新のA/B比較](results/runtime-ab-20261015/RESULTS.ja.md)
+- [公式MFの速度低下：段階別計測と原因切り分け](results/mf-runtime-cause-20261015/RESULTS.ja.md)
 
 共通設定は[config.json](config.json)、入力20文章は[prompts.json](prompts.json)、計測用の変更は[patches/](patches/)に保存しています。モデル・参照音声・ビルド成果物・測定生データは同梱しません。

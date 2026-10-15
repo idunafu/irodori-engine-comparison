@@ -1,0 +1,21 @@
+{
+  "preserved": true,
+  "preflight_count": 16,
+  "incomplete": 0,
+  "wall_requests": 12320,
+  "profile_requests": 12320,
+  "measured_conditions": 1104,
+  "affected": [
+    "Irodori-TTS-Optimiz-rf-cuda-fp32",
+    "Irodori-TTS-Optimiz-rf-cuda-practical",
+    "Irodori-TTS-mf-cuda-fp32",
+    "Irodori-TTS-mf-cuda-practical",
+    "Irodori-TTS-rf-cuda-fp32",
+    "Irodori-TTS-rf-cuda-practical",
+    "irodori-onnx-mf-cuda-fp32",
+    "irodori-onnx-mf-cuda-practical"
+  ],
+  "expected_conditions": 1104,
+  "missing_conditions": 0,
+  "measurement_complete": true
+}

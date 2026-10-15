@@ -77,3 +77,11 @@ F16モデル／FP32 codec、RF 40・MF 4ステップ、CUDA／Vulkan、p01（短
 3ラウンドで旧→新／新→旧／旧→新と実行順を交互にし、各条件2回warmup・通常5回・詳細5回を測定します。通常時間の階層bootstrap 95%区間が0を跨がず、全ラウンドで同方向の差がある組み合わせは、差が小さくても全20文章へ拡張します。2%以上の差はCSVの`practical_speed_difference`列で別に区別します。VRAMの拡張判定は32MiBかつ3%以上の差が同方向で再現することを条件とします。
 
 今回の全20文章への拡張対象はRFのCUDA／Vulkanです。MFは短文／長文の比較を掲載しています。[A/B結果レポート](../benchmark/results/speech-ab-6bd7b027/RESULTS.ja.md)に判定値と測定表を記載しています。
+
+## PyTorch／ONNX Runtime更新のA/B比較
+
+公式PyTorch版RF／MF、Optimiz版RF、ONNX版MFのFP32／実用精度を対象とします。エンジン・モデル・ONNXグラフを固定し、専用venvでPyTorch・TorchAudio・TorchCodec・CUDA依存、ONNX Runtimeを更新します。旧版は既存Python 3.10環境、新版PyTorchはPython 3.10、新版ONNXはPython 3.11です。ONNX測定はRustから共有ライブラリを直接読み込むため、Pythonの実行時間は含みません。runtime構成全体の比較であり、単一パッケージの因果効果を分離する測定ではありません。
+
+短文p01／長文p19、2秒／8秒、両キャッシュの3ラウンドで新旧の実行順を交互にし、各条件2回warmup・通常5回・同期する詳細計測5回を実行します。対応するラウンドを保った階層bootstrap 95%区間が0を跨がず、3ラウンドとも同方向なら、該当エンジン・モデル・精度を主比較と同じ130条件（matched・auto・text_scaling各20文章＋audio_scaling 5長さ、両キャッシュ）の新旧測定へ拡張します。条件別検定の多重性補正は行いません。2%以上の差は実用差として別記し、VRAM差は記録しますが拡張の判定には使いません。
+
+拡張測定は各版1ラウンド、各条件2回warmup・通常5回・詳細5回です。拡張後の差は記述統計として扱い、有意差の根拠は3ラウンドの小規模比較に置きます。ロード・初回推論は小規模比較の各ラウンドの独立workerで計3回保存します。新旧PCM差を保存し、全要求で48kHz・有限値・非無音・指定長を確認します。モデル・依存・既存結果の保持も最後に検証します。[更新A/Bレポート](../benchmark/results/runtime-ab-20261015/RESULTS.ja.md)を参照してください。

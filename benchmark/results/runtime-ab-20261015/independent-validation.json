@@ -1,0 +1,27 @@
+{
+  "records": 27192,
+  "screen_conditions": 64,
+  "expanded_conditions": 1040,
+  "original_environments_preserved": true,
+  "package_freezes_preserved": true,
+  "concurrent_compute_observations": 0,
+  "onnx_tooling": {
+    "onnx": "1.23.2",
+    "onnxscript": "0.7.2",
+    "onnxruntime": "1.31.0",
+    "providers": [
+      "TensorrtExecutionProvider",
+      "CUDAExecutionProvider",
+      "CPUExecutionProvider"
+    ],
+    "models_read": 13
+  },
+  "temperature_range": [
+    37,
+    75
+  ],
+  "clock_range": [
+    187,
+    2955
+  ]
+}

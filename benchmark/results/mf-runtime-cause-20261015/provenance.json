@@ -1,0 +1,156 @@
+{
+  "old": {
+    "type": "ready",
+    "torch": "2.10.0+cu128",
+    "cuda": "12.8",
+    "cudnn": 91002,
+    "mode": "default",
+    "benchmark": false,
+    "libraries": [
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/Irodori-TTS/lib/python3.10/site-packages/nvidia/cublas/lib/libcublas.so.12",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/Irodori-TTS/lib/python3.10/site-packages/nvidia/cublas/lib/libcublasLt.so.12",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/Irodori-TTS/lib/python3.10/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/Irodori-TTS/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/Irodori-TTS/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_adv.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/Irodori-TTS/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_engines_precompiled.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/Irodori-TTS/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_engines_runtime_compiled.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/Irodori-TTS/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_graph.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/Irodori-TTS/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_heuristic.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/Irodori-TTS/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_ops.so.9"
+    ],
+    "dacvae": "1.0.0",
+    "startup_wall_ms": 1779.34434695635,
+    "resident_vram": 1210056704,
+    "peak_vram": 1210056704,
+    "vram_method": "nvml_process",
+    "nvml_samples": 170,
+    "telemetry": {
+      "at": 626859.38022974,
+      "vram": 1210056704,
+      "method": "nvml_process",
+      "gpu_used": 1715208192,
+      "temperature": 38,
+      "sm_clock": 922
+    }
+  },
+  "new": {
+    "type": "ready",
+    "torch": "2.14.1+cu130",
+    "cuda": "13.0",
+    "cudnn": 92400,
+    "mode": "default",
+    "benchmark": false,
+    "libraries": [
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/runtime-ab-20261015/Irodori-TTS/lib/python3.10/site-packages/nvidia/cu13/lib/libcublas.so.13",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/runtime-ab-20261015/Irodori-TTS/lib/python3.10/site-packages/nvidia/cu13/lib/libcublasLt.so.13",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/runtime-ab-20261015/Irodori-TTS/lib/python3.10/site-packages/nvidia/cu13/lib/libcudart.so.13",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/runtime-ab-20261015/Irodori-TTS/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/runtime-ab-20261015/Irodori-TTS/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_adv.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/runtime-ab-20261015/Irodori-TTS/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_engines_precompiled.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/runtime-ab-20261015/Irodori-TTS/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_engines_runtime_compiled.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/runtime-ab-20261015/Irodori-TTS/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_engines_tensor_ir.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/runtime-ab-20261015/Irodori-TTS/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_graph.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/runtime-ab-20261015/Irodori-TTS/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_heuristic.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/runtime-ab-20261015/Irodori-TTS/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_ops.so.9"
+    ],
+    "dacvae": "1.0.0",
+    "startup_wall_ms": 2480.03473400604,
+    "resident_vram": 1348468736,
+    "peak_vram": 1348468736,
+    "vram_method": "nvml_process",
+    "nvml_samples": 244,
+    "telemetry": {
+      "at": 626865.470694944,
+      "vram": 1348468736,
+      "method": "nvml_process",
+      "gpu_used": 1853620224,
+      "temperature": 40,
+      "sm_clock": 607
+    }
+  },
+  "cudnn9241": {
+    "type": "ready",
+    "torch": "2.14.1+cu130",
+    "cuda": "13.0",
+    "cudnn": 92401,
+    "mode": "default",
+    "benchmark": false,
+    "libraries": [
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/mf-runtime-cause-20261015/cudnn9241/lib/python3.10/site-packages/nvidia/cu13/lib/libcublas.so.13",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/mf-runtime-cause-20261015/cudnn9241/lib/python3.10/site-packages/nvidia/cu13/lib/libcublasLt.so.13",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/mf-runtime-cause-20261015/cudnn9241/lib/python3.10/site-packages/nvidia/cu13/lib/libcudart.so.13",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/mf-runtime-cause-20261015/cudnn9241/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/mf-runtime-cause-20261015/cudnn9241/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_adv.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/mf-runtime-cause-20261015/cudnn9241/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_engines_precompiled.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/mf-runtime-cause-20261015/cudnn9241/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_engines_runtime_compiled.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/mf-runtime-cause-20261015/cudnn9241/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_engines_tensor_ir.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/mf-runtime-cause-20261015/cudnn9241/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_graph.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/mf-runtime-cause-20261015/cudnn9241/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_heuristic.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/mf-runtime-cause-20261015/cudnn9241/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_ops.so.9"
+    ],
+    "dacvae": "1.0.0",
+    "startup_wall_ms": 2593.299768981524,
+    "resident_vram": 1348468736,
+    "peak_vram": 1348468736,
+    "vram_method": "nvml_process",
+    "nvml_samples": 256,
+    "telemetry": {
+      "at": 627110.732058154,
+      "vram": 1348468736,
+      "method": "nvml_process",
+      "gpu_used": 1853620224,
+      "temperature": 52,
+      "sm_clock": 2542
+    }
+  },
+  "old924": {
+    "type": "ready",
+    "torch": "2.10.0+cu128",
+    "cuda": "12.8",
+    "cudnn": 92400,
+    "mode": "default",
+    "benchmark": false,
+    "libraries": [
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/mf-runtime-cause-20261015/old924/lib/python3.10/site-packages/nvidia/cublas/lib/libcublas.so.12",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/mf-runtime-cause-20261015/old924/lib/python3.10/site-packages/nvidia/cublas/lib/libcublasLt.so.12",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/mf-runtime-cause-20261015/old924/lib/python3.10/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/mf-runtime-cause-20261015/old924/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/mf-runtime-cause-20261015/old924/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_adv.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/mf-runtime-cause-20261015/old924/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_engines_precompiled.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/mf-runtime-cause-20261015/old924/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_engines_runtime_compiled.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/mf-runtime-cause-20261015/old924/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_engines_tensor_ir.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/mf-runtime-cause-20261015/old924/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_graph.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/mf-runtime-cause-20261015/old924/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_heuristic.so.9",
+      "/mnt/ssd1/irodori-engine-comparison/.venvs/mf-runtime-cause-20261015/old924/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn_ops.so.9"
+    ],
+    "dacvae": "1.0.0",
+    "startup_wall_ms": 2597.344485926442,
+    "resident_vram": 1348468736,
+    "peak_vram": 1348468736,
+    "vram_method": "nvml_process",
+    "nvml_samples": 254,
+    "telemetry": {
+      "at": 627211.899840804,
+      "vram": 1348468736,
+      "method": "nvml_process",
+      "gpu_used": 1853620224,
+      "temperature": 54,
+      "sm_clock": 1815
+    }
+  },
+  "source_sha256": {
+    "benchmark/mf_cause.py": "ac7e6bc2eff44aa7f82da555c255db1d941e0249335ee1d4278b2c535ef5c906",
+    "benchmark/mf_cause_setup.py": "be8595513c52ac25ea96c87b707e657644f2ad29ed8680e57be285ae3f9dee07",
+    "benchmark/mf_cause_report.py": "eec724dbcc4138c22ed4d104cba79af1063454a1b74dd18775823959d03db3c9",
+    "benchmark/mf_cause_worker.py": "7bf75a771ab7fbae627a5783b852cb9b0ccef3601e4f667d7796e158786d3f63",
+    "benchmark/mf_conv_probe.py": "e511f99e0155686f5009adeedd773097f76aab5cd32879f55517fb6e5b7d28d3",
+    "environments/mf-runtime-cause-20261015/old924-requirements.txt": "dc305918b7bf0b7a2730e7e1f99bf93c00b269649f2eaeaf613b144ca7f197bc",
+    "environments/mf-runtime-cause-20261015/cudnn9241-requirements.txt": "29819ff8bcae4b651f284b5afc00b48ded6a26c34592edbd32d4c57a1031ea71"
+  },
+  "hardware": "name, driver_version, memory.total [MiB]\nNVIDIA GeForce RTX 5090, 610.57.04, 32607 MiB\n",
+  "model_and_reference_sha256": {
+    "models/mf/model.safetensors": "a3f204b3ee06058f4e639a1af38408e7e3af5b6c75176897ecb8bfaaebb4fd54",
+    "models/codec/weights.pth": "db120339c5ee7eca1912cdf29bc612b947a0808e69c3cebfb4936b45a762c1d5",
+    "artifacts/benchmark/inputs/reference.wav": "3a77ad5b10e680b6a50e54b57a1c748277d1abfd8c26d98d3a7afd6f53029dab"
+  }
+}
