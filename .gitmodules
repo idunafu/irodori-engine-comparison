@@ -1,0 +1,21 @@
+[submodule "engines/Irodori-TTS"]
+	path = engines/Irodori-TTS
+	url = https://github.com/Aratako/Irodori-TTS.git
+[submodule "engines/audio.cpp"]
+	path = engines/audio.cpp
+	url = https://github.com/0xShug0/audio.cpp.git
+[submodule "engines/speech.cpp"]
+	path = engines/speech.cpp
+	url = https://github.com/nyosegawa/speech.cpp.git
+[submodule "engines/sttts-gui"]
+	path = engines/sttts-gui
+	url = https://github.com/kjranyone/sttts-gui.git
+[submodule "engines/Irodori-TTS-burn"]
+	path = engines/Irodori-TTS-burn
+	url = https://github.com/Sanzentyo/Irodori-TTS-burn.git
+[submodule "engines/irodori-onnx"]
+	path = engines/irodori-onnx
+	url = https://github.com/utyujinn/irodori-onnx.git
+[submodule "engines/Irodori-TTS-Optimiz"]
+	path = engines/Irodori-TTS-Optimiz
+	url = https://github.com/kuwacom/Irodori-TTS-Optimiz.git

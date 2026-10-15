@@ -1,0 +1,12 @@
+# Irodori-TTS 性能比較
+
+7実装のRF／MF・CUDA／Vulkanを、固定したモデルと共通入力で比較します。対象コミット、ハードウェア、重み精度の概要は[ルートREADME](../README.md)を参照してください。
+
+詳細な説明は以下にまとめています。
+
+- [環境構築・実行・途中再開・保存先](../docs/usage.ja.md)
+- [測定条件・指標の定義・精度の注意点](../docs/methodology.ja.md)
+- [主比較の結果：表とグラフ](results/RESULTS.ja.md)
+- [speech.cppのコミット間A/B比較](results/speech-ab-6bd7b027/RESULTS.ja.md)
+
+共通設定は[config.json](config.json)、入力20文章は[prompts.json](prompts.json)、計測用の変更は[patches/](patches/)に保存しています。モデル・参照音声・ビルド成果物・測定生データは同梱しません。

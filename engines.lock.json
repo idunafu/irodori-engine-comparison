@@ -1,0 +1,30 @@
+{
+  "Irodori-TTS": {
+    "repository": "https://github.com/Aratako/Irodori-TTS.git",
+    "commit": "89f9d8fbd4d51ea019867ee1197725ede1df13c5"
+  },
+  "audio.cpp": {
+    "repository": "https://github.com/0xShug0/audio.cpp.git",
+    "commit": "f1c299b73c06df27458e2ea8a7ab6638891ea3ba"
+  },
+  "speech.cpp": {
+    "repository": "https://github.com/nyosegawa/speech.cpp.git",
+    "commit": "c6f28804907ec47dc4d93b526cb7d3407020b417"
+  },
+  "sttts-gui": {
+    "repository": "https://github.com/kjranyone/sttts-gui.git",
+    "commit": "acce71245654779bef7542a364f06cad41a43ea8"
+  },
+  "Irodori-TTS-burn": {
+    "repository": "https://github.com/Sanzentyo/Irodori-TTS-burn.git",
+    "commit": "ad11d15c0aed1c6841f7bde8f23fa1b3bd45dc1f"
+  },
+  "irodori-onnx": {
+    "repository": "https://github.com/utyujinn/irodori-onnx.git",
+    "commit": "386eaf48a3b482b8f8bd509b6c65b904a0a512df"
+  },
+  "Irodori-TTS-Optimiz": {
+    "repository": "https://github.com/kuwacom/Irodori-TTS-Optimiz.git",
+    "commit": "4e5b933df4d6f8aafb21b4f4c0aa507965c56eb8"
+  }
+}

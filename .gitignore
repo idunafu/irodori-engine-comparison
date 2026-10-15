@@ -208,6 +208,16 @@ tempCodeRunnerFile.py
 # Ruff stuff:
 .ruff_cache/
 
+# Local comparison environments and generated artifacts
+/.venvs/
+/.cache/
+/artifacts/
+/models/
+/toolchains/
+/logs/
+/cache/
+/TYC054.wav
+
 # PyPI configuration file
 .pypirc
 

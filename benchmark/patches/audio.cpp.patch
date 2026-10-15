@@ -1,0 +1,505 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -4573,3 +4573,10 @@
+         target_link_libraries(model_spec_download_demo PRIVATE OpenMP::OpenMP_CXX)
+     endif()
+ endif()
++
++include_directories(${CMAKE_CURRENT_SOURCE_DIR})
++add_executable(comparison_bench comparison_bench.cpp)
++target_link_libraries(comparison_bench PRIVATE engine_runtime ggml)
++if(ENGINE_ENABLE_OPENMP)
++target_link_libraries(comparison_bench PRIVATE OpenMP::OpenMP_CXX)
++endif()
+--- a/comparison_bench.cpp
++++ b/comparison_bench.cpp
+@@ -0,0 +1,276 @@
++#include "profile.hpp"
++#include "engine/models/irodori_tts/session.h"
++#include <fstream>
++#include <iomanip>
++#include <cmath>
++#include "engine/framework/audio/wav_reader.h"
++#include "engine/framework/audio/wav_writer.h"
++#include "engine/framework/debug/trace.h"
++#include "engine/framework/io/json.h"
++#include "engine/framework/runtime/registry.h"
++#include "engine/framework/runtime/session.h"
++
++#include <algorithm>
++#include <chrono>
++#include <cmath>
++#include <cstdlib>
++#include <filesystem>
++#include <iostream>
++#include <stdexcept>
++#include <string>
++#include <utility>
++#include <vector>
++
++namespace {
++
++std::string arg_value(int argc, char ** argv, const std::string & name, const std::string & fallback) {
++    for (int i = 1; i + 1 < argc; ++i) {
++        if (argv[i] == name) {
++            return argv[i + 1];
++        }
++    }
++    return fallback;
++}
++
++int int_arg(int argc, char ** argv, const std::string & name, int fallback) {
++    return std::stoi(arg_value(argc, argv, name, std::to_string(fallback)));
++}
++
++std::vector<std::pair<std::string, std::string>> parse_session_options(int argc, char ** argv) {
++    std::vector<std::pair<std::string, std::string>> out;
++    for (int i = 1; i + 1 < argc; ++i) {
++        if (std::string(argv[i]) != "--session-option") {
++            continue;
++        }
++        const std::string option = argv[i + 1];
++        const size_t eq = option.find('=');
++        if (eq == std::string::npos || eq == 0) {
++            throw std::runtime_error("invalid Irodori-TTS --session-option: " + option);
++        }
++        out.emplace_back(option.substr(0, eq), option.substr(eq + 1));
++    }
++    return out;
++}
++
++engine::core::BackendType parse_backend(const std::string & value) {
++    if (value == "cuda") {
++        return engine::core::BackendType::Cuda;
++    }
++    if (value == "vulkan") return engine::core::BackendType::Vulkan;
++    throw std::runtime_error("Unknown benchmark backend");
++}
++
++std::string optional_string(const engine::io::json::Value & object, const std::string & key) {
++    const auto * value = object.find(key);
++    return value == nullptr || value->is_null() ? std::string{} : value->as_string();
++}
++
++std::string required_text(const engine::io::json::Value & object) {
++    std::string value = optional_string(object, "text");
++    if (value.empty()) {
++        value = optional_string(object, "prompt");
++    }
++    if (value.empty()) {
++        throw std::runtime_error("Irodori-TTS warmbench request missing text");
++    }
++    return value;
++}
++
++std::string option_text(const engine::io::json::Value & value) {
++    if (value.is_bool()) {
++        return value.as_bool() ? "true" : "false";
++    }
++    if (value.is_number()) {
++        return engine::io::json::stringify_number(value.as_number());
++    }
++    return value.as_string();
++}
++
++void set_optional_option(
++    engine::runtime::TaskRequest & request,
++    const engine::io::json::Value & object,
++    const std::string & key) {
++    const auto * value = object.find(key);
++    if (value != nullptr && !value->is_null()) {
++        request.options[key] = option_text(*value);
++    }
++}
++
++void set_mapped_optional_option(
++    engine::runtime::TaskRequest & request,
++    const engine::io::json::Value & object,
++    const std::string & source_key,
++    const std::string & target_key) {
++    const auto * value = object.find(source_key);
++    if (value != nullptr && !value->is_null()) {
++        request.options[target_key] = option_text(*value);
++    }
++}
++
++engine::runtime::AudioBuffer read_audio_buffer(const std::filesystem::path & path) {
++    bench::Scope file("reference_file_read");
++    const auto wav = engine::audio::read_wav_f32(path);
++    return engine::runtime::AudioBuffer{wav.sample_rate, wav.channels, wav.samples};
++}
++
++engine::runtime::TaskRequest make_request(const engine::io::json::Value & object) {
++    engine::runtime::TaskRequest request;
++    request.text_input = engine::runtime::Transcript{required_text(object), "ja"};
++    set_optional_option(request, object, "caption");
++    set_optional_option(request, object, "no_ref");
++    set_optional_option(request, object, "num_inference_steps");
++    set_optional_option(request, object, "guidance_scale");
++    set_optional_option(request, object, "text_guidance_scale");
++    set_optional_option(request, object, "caption_guidance_scale");
++    set_optional_option(request, object, "speaker_guidance_scale");
++    set_optional_option(request, object, "guidance_mode");
++    set_optional_option(request, object, "guidance_min_t");
++    set_optional_option(request, object, "guidance_max_t");
++    set_mapped_optional_option(request, object, "num_steps", "num_inference_steps");
++    set_mapped_optional_option(request, object, "cfg_scale", "guidance_scale");
++    set_mapped_optional_option(request, object, "cfg_scale_text", "text_guidance_scale");
++    set_mapped_optional_option(request, object, "cfg_scale_caption", "caption_guidance_scale");
++    set_mapped_optional_option(request, object, "cfg_scale_speaker", "speaker_guidance_scale");
++    set_mapped_optional_option(request, object, "cfg_guidance_mode", "guidance_mode");
++    set_mapped_optional_option(request, object, "cfg_min_t", "guidance_min_t");
++    set_mapped_optional_option(request, object, "cfg_max_t", "guidance_max_t");
++    set_optional_option(request, object, "duration_scale");
++    set_optional_option(request, object, "duration_sec");
++    if (const auto * value = object.find("seconds"); value != nullptr && !value->is_null()) {
++        request.options["duration_sec"] = option_text(*value);
++    }
++    set_mapped_optional_option(request, object, "duration_seconds", "duration_sec");
++    set_mapped_optional_option(request, object, "min_seconds", "min_duration_sec");
++    set_mapped_optional_option(request, object, "max_seconds", "max_duration_sec");
++    set_optional_option(request, object, "min_duration_sec");
++    set_optional_option(request, object, "max_duration_sec");
++    set_optional_option(request, object, "seed");
++    set_optional_option(request, object, "trim_tail");
++    const std::string ref_wav = optional_string(object, "ref_wav");
++    if (!ref_wav.empty()) {
++        request.voice = engine::runtime::VoiceCondition{};
++        request.voice->speaker = engine::runtime::VoiceReference{};
++        request.voice->speaker->audio = read_audio_buffer(ref_wav);
++    }
++    return request;
++}
++
++std::vector<engine::runtime::TaskRequest> parse_requests(const std::string & request_sequence_json) {
++    if (request_sequence_json.empty()) {
++        throw std::runtime_error("Irodori-TTS warmbench requires --request-sequence-json");
++    }
++    const auto root = engine::io::json::parse(request_sequence_json);
++    std::vector<engine::runtime::TaskRequest> requests;
++    for (const auto & item : root.as_array()) {
++        requests.push_back(make_request(item));
++    }
++    if (requests.empty()) {
++        throw std::runtime_error("Irodori-TTS warmbench request sequence is empty");
++    }
++    return requests;
++}
++
++engine::io::json::Value number(double value) {
++    return engine::io::json::Value::make_number(value);
++}
++
++engine::io::json::Value string(std::string value) {
++    return engine::io::json::Value::make_string(std::move(value));
++}
++
++engine::io::json::Value audio_summary_json(const engine::runtime::AudioBuffer & audio) {
++    if (audio.samples.empty()) {
++        throw std::runtime_error("Irodori-TTS warmbench received empty audio output");
++    }
++    double sum = 0.0;
++    double abs_sum = 0.0;
++    double sq_sum = 0.0;
++    float min_value = audio.samples.front();
++    float max_value = audio.samples.front();
++    for (const float sample : audio.samples) {
++        sum += static_cast<double>(sample);
++        abs_sum += std::abs(static_cast<double>(sample));
++        sq_sum += static_cast<double>(sample) * static_cast<double>(sample);
++        min_value = std::min(min_value, sample);
++        max_value = std::max(max_value, sample);
++    }
++    const auto channels = std::max(1, audio.channels);
++    const double frames = static_cast<double>(audio.samples.size() / static_cast<size_t>(channels));
++    const double count = static_cast<double>(audio.samples.size());
++    return engine::io::json::Value::make_object({
++        {"sample_rate", number(static_cast<double>(audio.sample_rate))},
++        {"channels", number(static_cast<double>(audio.channels))},
++        {"samples", number(count)},
++        {"frames", number(frames)},
++        {"duration_sec", number(audio.sample_rate > 0 ? frames / audio.sample_rate : 0.0)},
++        {"sum", number(sum)},
++        {"mean_abs", number(abs_sum / count)},
++        {"rms", number(std::sqrt(sq_sum / count))},
++        {"min", number(min_value)},
++        {"max", number(max_value)},
++    });
++}
++
++engine::io::json::Value step_json(
++    const engine::runtime::TaskResult & result,
++    int request_index,
++    double wall_ms,
++    const std::filesystem::path & audio_path) {
++    if (!result.audio_output.has_value()) {
++        throw std::runtime_error("Irodori-TTS warmbench expected audio output");
++    }
++    engine::io::json::Value::Object stem{
++        {"name", string("audio")},
++        {"summary", audio_summary_json(*result.audio_output)},
++    };
++    if (!audio_path.empty()) {
++        stem.emplace("audio", string(audio_path.string()));
++    }
++    return engine::io::json::Value::make_object({
++        {"request_index", number(static_cast<double>(request_index))},
++        {"stems", engine::io::json::Value::make_array({engine::io::json::Value::make_object(std::move(stem))})},
++        {"metrics", engine::io::json::Value::make_object({{"wall_ms", number(wall_ms)}})},
++    });
++}
++
++void set_env_required(const char * key, const std::string & value) {
++    if (setenv(key, value.c_str(), 1) != 0) {
++        throw std::runtime_error("failed to set environment variable: " + std::string(key));
++    }
++}
++
++}  // namespace
++
++int main(int argc,char **argv){
++ try {
++    engine::runtime::ModelLoadRequest load_request;load_request.model_path=argv[1];load_request.family_hint="irodori_tts";
++    auto t=std::chrono::steady_clock::now();auto registry=engine::runtime::make_default_registry();auto model=registry.load(load_request);
++    engine::runtime::SessionOptions options;options.backend.type=parse_backend(argv[3]);options.backend.device=0;options.backend.threads=8;
++    options.options["irodori_tts.reference_cache_slots"]="1";
++    auto session_base=model->create_task_session({engine::runtime::VoiceTaskKind::Tts,engine::runtime::RunMode::Offline},options);
++    auto *session=dynamic_cast<engine::runtime::IOfflineVoiceTaskSession*>(session_base.get());
++    auto *irodori=dynamic_cast<engine::models::irodori_tts::IrodoriTTSSession*>(session_base.get());
++    if(!session || !irodori)throw std::runtime_error("Session creation failed");
++    session->prepare(engine::runtime::SessionPreparationRequest{});
++    std::cout<<"BENCH {\"type\":\"ready\",\"load_ms\":"<<bench::elapsed(t)<<",\"device\":"<<std::quoted(argv[3])<<"}"<<std::endl;
++    std::string line;
++    while(std::getline(std::cin,line)){
++        const auto object=engine::io::json::parse(line);
++        if(optional_string(object,"type")=="stop")break;
++        const auto *p=object.find("profile");bench::active=p && p->as_bool();bench::events.clear();
++        if(optional_string(object,"cache")=="reencode")irodori->bench_clear_reference_cache();
++        auto t=std::chrono::steady_clock::now();auto request=make_request(object);
++        request.options["text_chunk_size"]="4096";
++        auto result=session->run(request);const double ms=bench::elapsed(t);
++        if(!result.audio_output)throw std::runtime_error("No PCM returned");
++        const auto &audio=*result.audio_output;double sq=0;bool finite=true;
++        for(float v:audio.samples){sq+=v*v;finite&=std::isfinite(v);}
++        auto output=optional_string(object,"output");
++        if(!output.empty()){std::ofstream out(output,std::ios::binary);out.write((char*)audio.samples.data(),audio.samples.size()*sizeof(float));}
++        std::cout<<"BENCH {\"type\":\"result\",\"id\":"<<std::quoted(optional_string(object,"id"))<<",\"ms\":"<<ms
++          <<",\"samples\":"<<audio.samples.size()<<",\"sample_rate\":"<<audio.sample_rate
++          <<",\"frames\":"<<(audio.samples.size()+1919)/1920<<",\"events\":"<<bench::take()
++          <<",\"finite\":"<<(finite?"true":"false")<<",\"rms\":"<<std::sqrt(sq/audio.samples.size())<<"}"<<std::endl;
++    }
++ }catch(const std::exception &e){std::cerr<<e.what()<<std::endl;return 1;}
++}
+--- a/profile.hpp
++++ b/profile.hpp
+@@ -0,0 +1,62 @@
++#pragma once
++#include <chrono>
++#include <cstdlib>
++#include <iomanip>
++#include <sstream>
++#include <string>
++#include <vector>
++#include <unordered_map>
++#include <cstring>
++#include <functional>
++#include "ggml.h"
++#include "ggml-backend.h"
++#include "ggml-alloc.h"
++namespace bench {
++inline thread_local bool active=false;
++inline thread_local std::vector<std::string> events;
++struct Scope {
++    const char * name; bool enabled; std::chrono::steady_clock::time_point start;
++    int batch=0, frames=0;
++    Scope(const char * n):name(n),enabled(active),start(std::chrono::steady_clock::now()){}
++    ~Scope(){ finish(); }
++    void finish(){ if(!enabled)return;
++        enabled=false;
++        const double ms=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-start).count();
++        std::ostringstream s; s << "{\"stage\":" << std::quoted(name) << ",\"ms\":" << ms
++          << ",\"batch\":" << batch << ",\"frames\":" << frames << "}";
++        events.push_back(s.str());
++    }
++};
++inline std::string take(){std::string s="[";for(auto & e:events){if(s.size()>1)s+=",";s+=e;}return s+"]";}
++inline double elapsed(std::chrono::steady_clock::time_point t){return std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-t).count();}
++// Separate graph nodes and allocations: backend graph optimizers mutate graph metadata.
++// Only leaves (parameters and prepared inputs) share read-only source buffers.
++inline void encoder_probe(const char *name,ggml_tensor *source,ggml_backend_t backend){
++    if(!active || !source)return;
++    const size_t capacity=65536;
++    auto *ctx=ggml_init({ggml_graph_overhead_custom(capacity,false)+capacity*ggml_tensor_overhead(),nullptr,true});
++    std::unordered_map<ggml_tensor*,ggml_tensor*> copies;
++    std::function<ggml_tensor*(ggml_tensor*)> clone=[&](ggml_tensor *t)->ggml_tensor*{
++        if(!t)return nullptr;
++        if(copies.count(t))return copies[t];
++        auto *copy=ggml_new_tensor(ctx,t->type,4,t->ne);
++        *copy=*t;copies[t]=copy;
++        copy->extra=nullptr;
++        for(int i=0;i<GGML_MAX_SRC;i++)copy->src[i]=clone(t->src[i]);
++        copy->view_src=clone(t->view_src);
++        if(t->op!=GGML_OP_NONE){copy->data=nullptr;copy->buffer=nullptr;}
++        return copy;
++    };
++    auto *output=clone(source);auto *graph=ggml_new_graph_custom(ctx,capacity,false);
++    ggml_build_forward_expand(graph,output);
++    auto alloc=ggml_gallocr_new(ggml_backend_get_default_buffer_type(backend));
++    if(!ggml_gallocr_alloc_graph(alloc,graph))throw std::runtime_error("Encoder probe allocation failed");
++    {
++        Scope timer(name);
++        if(ggml_backend_graph_compute(backend,graph)!=GGML_STATUS_SUCCESS)throw std::runtime_error("Encoder probe compute failed");
++        ggml_backend_synchronize(backend);
++        std::vector<char> bytes(ggml_nbytes(output));ggml_backend_tensor_get(output,bytes.data(),0,bytes.size());
++    }
++    ggml_gallocr_free(alloc);ggml_free(ctx);
++}
++}
+--- a/include/engine/models/irodori_tts/session.h
++++ b/include/engine/models/irodori_tts/session.h
+@@ -27,6 +27,7 @@
+                                 public runtime::IOfflineVoiceTaskSession,
+                                 public runtime::StreamingTtsSessionBase {
+ public:
++  void bench_clear_reference_cache() { reference_speaker_cache_.clear(); }
+   IrodoriTTSSession(runtime::TaskSpec task, runtime::SessionOptions options,
+                     std::shared_ptr<const IrodoriTTSAssets> assets,
+                     std::shared_ptr<const engine::model_spec::ModelContract> contract);
+--- a/src/models/irodori_tts/codec.cpp
++++ b/src/models/irodori_tts/codec.cpp
+@@ -1,3 +1,4 @@
++#include "profile.hpp"
+ #include "engine/models/irodori_tts/codec.h"
+ 
+ #include "engine/framework/audio/conversion.h"
+@@ -633,6 +634,7 @@
+ 
+   std::vector<float> encode_reference(const runtime::AudioBuffer &audio,
+                                       int64_t &latent_steps_out) {
++    bench::Scope prep("reference_preprocess_in_codec");
+     auto mono = engine::audio::mixdown_interleaved_to_mono_average(
+         audio.samples, audio.channels);
+     if (audio.sample_rate != assets_->codec.sample_rate) {
+@@ -647,6 +649,7 @@
+     normalize_reference_audio_in_place(mono, -16.0);
+     mono = reflect_pad_right_to_multiple(std::move(mono),
+                                          assets_->codec.hop_length);
++    prep.finish();
+     const int64_t padded_samples = static_cast<int64_t>(mono.size());
+     const int64_t hop = assets_->codec.hop_length;
+     const int64_t latent_steps = padded_samples / hop;
+@@ -967,12 +970,14 @@
+                                           int64_t target_samples,
+                                           const std::function<void(const runtime::AudioBuffer &)> &on_audio,
+                                           int64_t stream_frames) {
++  bench::Scope codec_timer("codec_decode");
+   return impl_->decode(latent, latent_steps, target_samples, on_audio, stream_frames);
+ }
+ 
+ std::vector<float>
+ IrodoriCodec::encode_reference(const runtime::AudioBuffer &audio,
+                                int64_t &latent_steps_out) {
++  bench::Scope codec_timer("codec_encode");
+   return impl_->encode_reference(audio, latent_steps_out);
+ }
+ 
+--- a/src/models/irodori_tts/condition_encoder.cpp
++++ b/src/models/irodori_tts/condition_encoder.cpp
+@@ -1,3 +1,4 @@
++#include "profile.hpp"
+ #include "engine/models/irodori_tts/condition_encoder.h"
+ 
+ #include "engine/framework/core/backend_weight_store.h"
+@@ -1460,6 +1461,12 @@
+                                      config.pretrained_text_sliding_window));
+       }
+       core::write_tensor_i32(positions_, positions(tokens_));
++      if (bench::active) {
++        bench::encoder_probe("text_encode_probe",output_text_.tensor,owner_->backend_);
++        if(config.use_caption_condition)bench::encoder_probe("caption_encode_probe",output_caption_.tensor,owner_->backend_);
++      }
++
++      bench::Scope actual_encoder_timer("text_caption_duration_fused");
+       core::set_backend_threads(owner_->backend_, owner_->threads_);
+       const ggml_status status = core::compute_backend_graph(
+           owner_->backend_, graph_, nullptr, "irodori_tts.condition");
+@@ -1529,11 +1536,13 @@
+                              const std::vector<uint8_t> &token_mask,
+                              const IrodoriCaptionCondition &caption,
+                              const IrodoriSpeakerCondition &speaker) {
++  bench::Scope conditions_timer("condition_call_including_probes");
+   return impl_->run(token_ids, token_mask, caption, speaker);
+ }
+ 
+ IrodoriSpeakerCondition IrodoriConditionEncoder::encode_speaker_reference(
+     const std::vector<float> &ref_latent, int64_t ref_tokens) {
++  bench::Scope speaker_timer("speaker_encode");
+   return impl_->encode_speaker_reference(ref_latent, ref_tokens);
+ }
+ 
+--- a/src/models/irodori_tts/session.cpp
++++ b/src/models/irodori_tts/session.cpp
+@@ -1,3 +1,4 @@
++#include "profile.hpp"
+ #include "engine/models/irodori_tts/session.h"
+ 
+ #include "engine/framework/debug/profiler.h"
+@@ -771,6 +772,7 @@
+   IrodoriCaptionCondition caption;
+   double tokenize_ms = 0.0;
+   if (assets_->config.use_caption_condition) {
++    bench::Scope caption_tokenizer("caption_tokenize");
+     const auto caption_start = Clock::now();
+     const std::string caption_text = trim_ascii(first_request.caption);
+     auto tokenized_caption =
+@@ -809,8 +811,8 @@
+         "irodori_tts.chunk." + std::to_string(chunk_index) + ".seed",
+         irodori_request.generation.seed);
+     const auto text_start = Clock::now();
+-    const auto tokenized = tokenizer_.encode_padded(
+-        irodori_request.text, assets_->config.max_text_len);
++    const auto tokenized = [&]{bench::Scope t("text_tokenize");return tokenizer_.encode_padded(
++        irodori_request.text, assets_->config.max_text_len);}();
+     tokenize_ms += debug::elapsed_ms(text_start);
+ 
+     const auto condition_start = Clock::now();
+--- a/src/models/irodori_tts/rf_dit.cpp
++++ b/src/models/irodori_tts/rf_dit.cpp
+@@ -1,3 +1,4 @@
++#include "profile.hpp"
+ #include "engine/models/irodori_tts/rf_dit.h"
+ #include "engine/models/irodori_tts/schedule.h"
+ 
+@@ -1600,6 +1601,9 @@
+               guidance.select(input.state.schedule.t,
+                               input.state.sequence_index);
+           const auto start = Clock::now();
++          bench::Scope forward_timer("dit_forward");
++          forward_timer.frames=shape.latent_steps;
++          forward_timer.batch=(int)step_batch(selection.text_cfg_enabled,selection.speaker_cfg_enabled,selection.caption_cfg_enabled);
+           auto velocity = run_step_velocity(
+               input.latent, input.state.sequence_index, modulation_cache,
+               selection);
+@@ -2238,6 +2242,7 @@
+ IrodoriRfSampleResult IrodoriRfSampler::sample(
+     const IrodoriRfSampleRequest &request,
+     IrodoriRfSampleTiming *timing) {
++  bench::Scope sampling_timer("sampling");
+   return impl_->sample(request, timing);
+ }
+ 
+--- a/src/framework/sampling/flow_sampler_runtime.cpp
++++ b/src/framework/sampling/flow_sampler_runtime.cpp
+@@ -1,3 +1,4 @@
++#include "profile.hpp"
+ #include "engine/framework/sampling/flow_sampler_runtime.h"
+ 
+ #include <algorithm>
+@@ -342,6 +343,7 @@
+         apply_cache_updates(begin_updates);
+         latent_ = initial_latent;
+         preserved_latent_ = initial_latent;
++        bench::Scope loop_timer("sampling_loop");
+         for (int64_t i = 0; i < static_cast<int64_t>(config_.schedule.size()); ++i) {
+             auto state = make_step_state(i);
+             ensure_graph(state);

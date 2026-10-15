@@ -1,0 +1,200 @@
+--- a/crates/irodori-tts/src/bench_profile.rs
++++ b/crates/irodori-tts/src/bench_profile.rs
+@@ -0,0 +1,16 @@
++use std::{cell::RefCell,time::Instant};
++use serde_json::{Value,json};
++thread_local! {
++    static ENABLED: RefCell<bool> = const { RefCell::new(false) };
++    static EVENTS: RefCell<Vec<Value>> = const { RefCell::new(Vec::new()) };
++}
++fn sync() {} // ORT outputs are read back synchronously by the pinned engine.
++pub fn begin(enabled:bool){ENABLED.with(|e| *e.borrow_mut()=enabled);EVENTS.with(|e| e.borrow_mut().clear());}
++pub fn take()->Vec<Value>{EVENTS.with(|e| e.borrow().clone())}
++pub struct Scope { name: &'static str, start:Instant, enabled:bool, gpu:bool, shape:Vec<usize> }
++impl Scope {
++    pub fn new(name:&'static str)->Self{let enabled=ENABLED.with(|e| *e.borrow());if enabled{sync();}Self{name,start:Instant::now(),enabled,gpu:true,shape:Vec::new()}}
++    pub fn cpu(name:&'static str)->Self{Self{name,start:Instant::now(),enabled:ENABLED.with(|e| *e.borrow()),gpu:false,shape:Vec::new()}}
++    pub fn shape(&mut self,shape:Vec<usize>){self.shape=shape;}
++}
++impl Drop for Scope {fn drop(&mut self){if self.enabled{if self.gpu{sync();}EVENTS.with(|e|e.borrow_mut().push(json!({"stage":self.name,"ms":self.start.elapsed().as_secs_f64()*1000.,"shape":self.shape})));}}}
+--- a/crates/irodori-tts/src/registrar.rs
++++ b/crates/irodori-tts/src/registrar.rs
+@@ -69,11 +69,15 @@
+ 
+     /// The codec latent `(frames, 32)` of one recording (resampled and loudness-normalized first).
+     pub fn encode_clip(&mut self, clip: &Clip<'_>) -> Result<Array2<f32>> {
++        let _bench_scope = crate::bench_profile::Scope::new("codec_encode");
++
++        let _prep=crate::bench_profile::Scope::cpu("reference_preprocess_in_codec");
+         let mut samples = audio::resample_to_codec_rate(clip.samples, clip.sample_rate)?;
+         audio::normalize_reference_loudness(&mut samples)?;
+         // The exported encoder expects a whole number of frames; the padding of the original model is done here (zeros on the right).
+         samples.resize(samples.len().div_ceil(HOP) * HOP, 0.0);
+         let wav = Array3::from_shape_vec((1, 1, samples.len()), samples)?;
++        drop(_prep);
+         let out = self.codec_encoder.run_with_options(ort::inputs!["wav" => Tensor::from_array(wav)?], &self.run_options)?;
+         let (shape, data) = out[0].try_extract_tensor::<f32>()?;
+         Ok(Array2::from_shape_vec((shape[1] as usize, shape[2] as usize), data.to_vec())?)
+@@ -96,6 +100,7 @@
+         let frames = latent.len() / LATENT_DIM;
+         let ref_latent = Array3::from_shape_vec((1, frames, LATENT_DIM), latent)?;
+         let ref_mask = Array2::from_elem((1, frames), true);
++        let _speaker_timer = crate::bench_profile::Scope::new("speaker_encode");
+         let out = self.speaker_encoder.run_with_options(
+             ort::inputs!["ref_latent" => Tensor::from_array(ref_latent)?, "ref_mask" => Tensor::from_array(ref_mask)?],
+             &self.run_options,
+--- a/crates/irodori-tts/src/engine.rs
++++ b/crates/irodori-tts/src/engine.rs
+@@ -48,6 +48,7 @@
+ pub struct SynthOptions {
+     /// Number of sampler steps (the MeanFlow checkpoint defaults to 4).
+     pub steps: usize,
++    pub seconds: Option<f64>,
+     pub seed: u64,
+     pub min_seconds: f32,
+     pub max_seconds: f32,
+@@ -81,6 +82,7 @@
+     fn default() -> Self {
+         Self {
+             steps: 4,
++            seconds: None,
+             seed: 0,
+             min_seconds: 0.5,
+             max_seconds: 30.0,
+@@ -175,14 +177,14 @@
+         if normalized.is_empty() {
+             return Err(Error::EmptyText);
+         }
+-        let ids = self.tokenizer.encode(normalized, MAX_TEXT_LEN)?;
++        let ids = {let _t=crate::bench_profile::Scope::cpu("text_tokenize");self.tokenizer.encode(normalized, MAX_TEXT_LEN)?};
+         let tokens = ids.len();
+         let ids = Array2::from_shape_vec((1, tokens), ids.iter().map(|&i| i as i64).collect())?;
+         let text_mask = Array2::from_elem((1, tokens), true);
+ 
+         let (caption_state, caption_mask, has_caption) = self.encode_caption(opts.caption.as_deref())?;
+         let text_state = self.encode_text(ids, &text_mask)?;
+-        let frames = self.predict_frames(normalized, tokens, &text_state, &text_mask, voice, &caption_state, &caption_mask, has_caption, opts)?;
++        let frames = if let Some(seconds) = opts.seconds { (seconds * 25.0).round() as usize } else { self.predict_frames(normalized, tokens, &text_state, &text_mask, voice, &caption_state, &caption_mask, has_caption, opts)? };
+         let x = self.run_dit_loop(frames, &text_state, &text_mask, voice, &caption_state, &caption_mask, opts)?;
+ 
+         let mut samples = self.decode(&x, frames, opts)?;
+@@ -205,9 +207,11 @@
+     /// it ANDs with caption_mask, so it's really just "ignore the caption entirely" spelled out
+     /// as its own flag instead of relying on every mask entry happening to be False.
+     fn encode_caption(&mut self, caption: Option<&str>) -> Result<(Array3<f32>, Array2<bool>, bool)> {
++        let _bench_scope = crate::bench_profile::Scope::new("caption_encode");
++
+         match caption.map(str::trim) {
+             Some(caption) if !caption.is_empty() => {
+-                let cap_ids = self.tokenizer.encode(caption, MAX_CAPTION_LEN)?;
++                let cap_ids = {let _t=crate::bench_profile::Scope::cpu("caption_tokenize");self.tokenizer.encode(caption, MAX_CAPTION_LEN)?};
+                 let cap_tokens = cap_ids.len();
+                 let cap_ids = Array2::from_shape_vec((1, cap_tokens), cap_ids.iter().map(|&i| i as i64).collect())?;
+                 let cap_mask = Array2::from_elem((1, cap_tokens), true);
+@@ -222,6 +226,8 @@
+     }
+ 
+     fn encode_text(&mut self, ids: Array2<i64>, text_mask: &Array2<bool>) -> Result<Array3<f32>> {
++        let _bench_scope = crate::bench_profile::Scope::new("text_encode");
++
+         let out = self.text_encoder.run_with_options(
+             ort::inputs!["input_ids" => Tensor::from_array(ids)?, "mask" => TensorRef::from_array_view(text_mask.view())?],
+             &self.run_options,
+@@ -242,6 +248,8 @@
+         has_caption: bool,
+         opts: &SynthOptions,
+     ) -> Result<usize> {
++        let _bench_scope = crate::bench_profile::Scope::new("duration_predict");
++
+         let features = text::duration_features(normalized, tokens, MAX_TEXT_LEN, true);
+         let out = self.duration.run_with_options(
+             ort::inputs![
+@@ -273,6 +281,8 @@
+         caption_mask: &Array2<bool>,
+         opts: &SynthOptions,
+     ) -> Result<Array3<f32>> {
++        let _bench_scope = crate::bench_profile::Scope::new("sampling");
++
+         let mut x = match &opts.noise {
+             Some(noise) if noise.shape() == [1, frames, LATENT_DIM] => noise.clone(),
+             Some(noise) => return Err(Error::Model(format!("injected noise has shape {:?}, expected [1, {frames}, {LATENT_DIM}]", noise.shape()))),
+@@ -300,6 +310,7 @@
+         dit_binding.bind_input("caption_state", &Tensor::from_array(caption_state.clone())?)?;
+         dit_binding.bind_input("caption_mask", &Tensor::from_array(caption_mask.clone())?)?;
+         dit_binding.bind_output_to_device("velocity", &MemoryInfo::new(AllocationDevice::CPU, 0, AllocatorType::Device, MemoryType::CPUOutput)?)?;
++        let _loop_scope=crate::bench_profile::Scope::new("sampling_loop");
+         for step in 0..opts.steps {
+             let (t, next) = (schedule[step], schedule[step + 1]);
+             let t_embed = Array2::from_shape_vec((1, TIMESTEP_DIM), sampler::timestep_embedding(t, TIMESTEP_DIM))?;
+@@ -307,8 +318,11 @@
+             dit_binding.bind_input("x_t", &Tensor::from_array(x.clone())?)?;
+             dit_binding.bind_input("t_embed", &Tensor::from_array(t_embed)?)?;
+             dit_binding.bind_input("delta_embed", &Tensor::from_array(delta_embed)?)?;
++            let mut _dit_timer = crate::bench_profile::Scope::new("dit_forward");
++            _dit_timer.shape(vec![1,frames,LATENT_DIM]);
+             let out = self.dit.run_binding_with_options(&dit_binding, &self.run_options)?;
+             let (_, velocity) = out[0].try_extract_tensor::<f32>()?;
++            drop(_dit_timer);
+             let dt = next - t;
+             for (xi, vi) in x.iter_mut().zip(velocity) {
+                 *xi += vi * dt;
+@@ -320,6 +334,8 @@
+     /// Runs the codec decoder and applies `trim_tail` (the only postprocessing step that needs
+     /// the latent rather than just the decoded waveform, see [`postprocess_samples`] for the rest).
+     fn decode(&mut self, x: &Array3<f32>, frames: usize, opts: &SynthOptions) -> Result<Vec<f32>> {
++        let _bench_scope = crate::bench_profile::Scope::new("codec_decode");
++
+         let mut samples = {
+             let out = self.decoder.run_with_options(ort::inputs!["latent" => TensorRef::from_array_view(x.view())?], &self.run_options)?;
+             let (_, audio) = out[0].try_extract_tensor::<f32>()?;
+--- a/crates/irodori-tts/src/session.rs
++++ b/crates/irodori-tts/src/session.rs
+@@ -19,7 +19,8 @@
+ /// contrast, is built fresh and dropped after registering exactly one voice (one shape, one
+ /// call), so there is nothing for the flag to cost or save there.
+ pub(crate) fn build_session(path: &Path, cuda_device: Option<i32>, disable_memory_pattern: bool) -> Result<Session> {
+-    let mut builder = Session::builder()?;
++    let mut builder = Session::builder()?.with_intra_threads(8)?.with_inter_threads(1)?
++            .with_config_entry("session.intra_op.allow_spinning", "0")?;
+     if disable_memory_pattern {
+         builder = builder.with_memory_pattern(false)?;
+     }
+--- a/crates/irodori-tts/src/lib.rs
++++ b/crates/irodori-tts/src/lib.rs
+@@ -38,3 +38,5 @@
+ }
+ 
+ pub type Result<T> = std::result::Result<T, Error>;
++
++pub mod bench_profile;
+--- a/crates/irodori-tts/examples/comparison_bench.rs
++++ b/crates/irodori-tts/examples/comparison_bench.rs
+@@ -0,0 +1,28 @@
++use std::{io::{self,BufRead,Write},path::PathBuf,time::Instant};
++use serde_json::{Value,json};
++use irodori_tts::{Clip,Engine,EngineConfig,SynthOptions,VoiceRegistrar};
++fn emit(v:Value){println!("BENCH {v}");io::stdout().flush().unwrap();}
++fn main()->Result<(),Box<dyn std::error::Error>> {
++    let a:Vec<String>=std::env::args().collect();let root=PathBuf::from(&a[1]);let t=Instant::now();
++    let config=EngineConfig{model_dir:root.join("artifacts/onnx/export/ref"),tokenizer_dir:root.join("models/mf/tokenizer"),
++        ort_dylib:std::env::var("IRODORI_ORT_DLL").ok().map(PathBuf::from),fp16:a[2]=="fp16",cuda_device:Some(0)};
++    let mut engine=Engine::new(&config)?;let mut registrar=VoiceRegistrar::new(&config)?;
++    emit(json!({"type":"ready","load_ms":t.elapsed().as_secs_f64()*1000.,"precision":a[2],"device":"CUDA:0"}));
++    let mut reader=hound::WavReader::open(root.join("artifacts/benchmark/inputs/reference.wav"))?;
++    let samples:Vec<f32>=reader.samples::<i32>().map(|x|x.unwrap() as f32/8388608.).collect();
++    let mut voice=None;
++    for line in io::stdin().lock().lines(){let r:Value=serde_json::from_str(&line?)?;if r["type"]=="stop"{break;}
++        irodori_tts::bench_profile::begin(r["profile"].as_bool().unwrap_or(false));let t=Instant::now();
++        let hit=voice.is_some() && r["cache"]=="native_cache";
++        if !hit{let _p=irodori_tts::bench_profile::Scope::new("reference_total");voice=Some(registrar.register(&[Clip{samples:&samples,sample_rate:48000}])?);}
++        let opts=SynthOptions{steps:4,seed:42,trim_tail:false,caption:Some("自然な日本語で、落ち着いた口調で話す。".into()),
++            seconds:r["seconds"].as_f64(),..SynthOptions::default()};
++        let out=engine.synthesize(r["text"].as_str().unwrap(),voice.as_ref().unwrap(),&opts)?;
++        let ms=t.elapsed().as_secs_f64()*1000.;
++        if let Some(path)=r["output"].as_str(){let mut f=std::fs::File::create(path)?;for v in &out.samples{f.write_all(&v.to_le_bytes())?;}}
++        let rms=(out.samples.iter().map(|v|v*v).sum::<f32>()/out.samples.len() as f32).sqrt();
++        emit(json!({"type":"result","id":r["id"],"ms":ms,"samples":out.samples.len(),"sample_rate":out.sample_rate,
++            "frames":out.frames,"events":irodori_tts::bench_profile::take(),"finite":out.samples.iter().all(|v|v.is_finite()),
++            "rms":rms,"reference_cache_hit":hit}));
++    }Ok(())
++}

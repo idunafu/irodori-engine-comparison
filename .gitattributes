@@ -1,0 +1,5 @@
+# Preserve generated CSV bytes, including their standard CRLF record endings.
+benchmark/results/**/*.csv -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# Unified diff context lines contain significant spaces; preserve them verbatim.
+benchmark/patches/*.patch -text -whitespace

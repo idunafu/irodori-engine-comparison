@@ -1,0 +1,235 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -376,3 +376,7 @@
+ 
+ add_executable(fft-check checks/common/fft-check.cpp)
+ target_link_libraries(fft-check PRIVATE speechcommon)
++
++include_directories(${CMAKE_CURRENT_SOURCE_DIR})
++add_executable(comparison_bench comparison_bench.cpp)
++target_link_libraries(comparison_bench PRIVATE irodoritts)
+--- a/comparison_bench.cpp
++++ b/comparison_bench.cpp
+@@ -0,0 +1,45 @@
++#include "irodori-tts/synthesizer.h"
++#include "ggml-backend.h"
++#include "profile.hpp"
++#include <fstream>
++#include <iostream>
++#include <sstream>
++#include <cmath>
++int main(int argc,char ** argv){
++ try {
++    ggml_backend_load_all();
++    auto dev=ggml_backend_dev_by_type(GGML_BACKEND_DEVICE_TYPE_GPU);
++    if(!dev)throw std::runtime_error("No GPU backend");
++    auto t=std::chrono::steady_clock::now();
++    auto backend=ggml_backend_dev_init(dev,nullptr);
++    irodori::Synthesizer synth(argv[1],backend);
++    std::cout<<"BENCH {\"type\":\"ready\",\"load_ms\":"<<bench::elapsed(t)<<",\"device\":"<<std::quoted(ggml_backend_dev_description(dev))<<"}"<<std::endl;
++    irodori::Voice voice; bool has_voice=false;
++    std::string line;
++    while(std::getline(std::cin,line)){
++      if(line=="stop")break;
++      std::vector<std::string> fields;std::stringstream ss(line);std::string f;
++      while(std::getline(ss,f,'\t'))fields.push_back(f);
++      if(fields.size()<7)throw std::runtime_error("Invalid benchmark request");
++      bench::active=fields[1]=="1";bench::events.clear();
++      irodori::Request r;r.text=fields[4];r.caption="自然な日本語で、落ち着いた口調で話す。";
++      r.seed=42;r.steps=std::stoi(argv[3]);r.length.seconds=std::stod(fields[3]);
++      auto tail=synth.default_tail();tail.keep=true;r.tail=tail;
++      if(r.steps==40){auto g=synth.default_guidance();g.text=3;g.caption=3;g.speaker=5;
++         g.mode=irodori::GuidanceMode::Independent;g.min_t=.5;g.max_t=1.;g.sway=0;r.guidance=g;}
++      auto started=std::chrono::steady_clock::now();
++      bool hit=fields[2]=="native_cache" && has_voice;
++      if(!hit){bench::Scope p("reference_total");voice=synth.load_voice(argv[2]);has_voice=true;}
++      std::vector<float> audio;irodori::Stats stats;
++      synth.synthesize(r,voice,[&](const float *p,size_t n){audio.insert(audio.end(),p,p+n);return true;},&stats);
++      const double ms=bench::elapsed(started);
++      double sq=0;bool finite=true;for(float v:audio){sq+=v*v;finite&=std::isfinite(v);}
++      if(fields[5]!="-"){std::ofstream out(fields[5],std::ios::binary);out.write((char*)audio.data(),audio.size()*sizeof(float));}
++      std::cout<<"BENCH {\"type\":\"result\",\"id\":"<<std::quoted(fields[0])<<",\"ms\":"<<ms
++        <<",\"samples\":"<<audio.size()<<",\"sample_rate\":48000,\"frames\":"<<stats.frames
++        <<",\"events\":"<<bench::take()<<",\"reference_cache_hit\":"<<(hit?"true":"false")
++        <<",\"finite\":"<<(finite?"true":"false")<<",\"rms\":"<<std::sqrt(sq/audio.size())
++        <<",\"stages\":{\"text_caption_duration_fused\":"<<stats.text<<",\"sample_rf\":"<<stats.sampling<<",\"decode_latent\":"<<stats.codec<<"}}"<<std::endl;
++    }
++ }catch(const std::exception &e){std::cerr<<e.what()<<std::endl;return 1;}
++}
+--- a/profile.hpp
++++ b/profile.hpp
+@@ -0,0 +1,62 @@
++#pragma once
++#include <chrono>
++#include <cstdlib>
++#include <iomanip>
++#include <sstream>
++#include <string>
++#include <vector>
++#include <unordered_map>
++#include <cstring>
++#include <functional>
++#include "ggml.h"
++#include "ggml-backend.h"
++#include "ggml-alloc.h"
++namespace bench {
++inline thread_local bool active=false;
++inline thread_local std::vector<std::string> events;
++struct Scope {
++    const char * name; bool enabled; std::chrono::steady_clock::time_point start;
++    int batch=0, frames=0;
++    Scope(const char * n):name(n),enabled(active),start(std::chrono::steady_clock::now()){}
++    ~Scope(){ finish(); }
++    void finish(){ if(!enabled)return;
++        enabled=false;
++        const double ms=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-start).count();
++        std::ostringstream s; s << "{\"stage\":" << std::quoted(name) << ",\"ms\":" << ms
++          << ",\"batch\":" << batch << ",\"frames\":" << frames << "}";
++        events.push_back(s.str());
++    }
++};
++inline std::string take(){std::string s="[";for(auto & e:events){if(s.size()>1)s+=",";s+=e;}return s+"]";}
++inline double elapsed(std::chrono::steady_clock::time_point t){return std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-t).count();}
++// Separate graph nodes and allocations: backend graph optimizers mutate graph metadata.
++// Only leaves (parameters and prepared inputs) share read-only source buffers.
++inline void encoder_probe(const char *name,ggml_tensor *source,ggml_backend_t backend){
++    if(!active || !source)return;
++    const size_t capacity=65536;
++    auto *ctx=ggml_init({ggml_graph_overhead_custom(capacity,false)+capacity*ggml_tensor_overhead(),nullptr,true});
++    std::unordered_map<ggml_tensor*,ggml_tensor*> copies;
++    std::function<ggml_tensor*(ggml_tensor*)> clone=[&](ggml_tensor *t)->ggml_tensor*{
++        if(!t)return nullptr;
++        if(copies.count(t))return copies[t];
++        auto *copy=ggml_new_tensor(ctx,t->type,4,t->ne);
++        *copy=*t;copies[t]=copy;
++        copy->extra=nullptr;
++        for(int i=0;i<GGML_MAX_SRC;i++)copy->src[i]=clone(t->src[i]);
++        copy->view_src=clone(t->view_src);
++        if(t->op!=GGML_OP_NONE){copy->data=nullptr;copy->buffer=nullptr;}
++        return copy;
++    };
++    auto *output=clone(source);auto *graph=ggml_new_graph_custom(ctx,capacity,false);
++    ggml_build_forward_expand(graph,output);
++    auto alloc=ggml_gallocr_new(ggml_backend_get_default_buffer_type(backend));
++    if(!ggml_gallocr_alloc_graph(alloc,graph))throw std::runtime_error("Encoder probe allocation failed");
++    {
++        Scope timer(name);
++        if(ggml_backend_graph_compute(backend,graph)!=GGML_STATUS_SUCCESS)throw std::runtime_error("Encoder probe compute failed");
++        ggml_backend_synchronize(backend);
++        std::vector<char> bytes(ggml_nbytes(output));ggml_backend_tensor_get(output,bytes.data(),0,bytes.size());
++    }
++    ggml_gallocr_free(alloc);ggml_free(ctx);
++}
++}
+--- a/src/families/irodori-tts/codec.cpp
++++ b/src/families/irodori-tts/codec.cpp
+@@ -1,3 +1,4 @@
++#include "profile.hpp"
+ #include "codec.h"
+ 
+ #include <algorithm>
+@@ -157,6 +158,7 @@
+ }
+ 
+ std::vector<float> Codec::encode(const std::vector<float> & audio, int window) {
++    bench::Scope p("codec_encode");
+     const int64_t length = (int64_t) audio.size();
+     const int64_t remainder = length % hop_;
+     std::vector<float> padded = audio;
+--- a/src/families/irodori-tts/synthesizer.cpp
++++ b/src/families/irodori-tts/synthesizer.cpp
+@@ -1,3 +1,4 @@
++#include "profile.hpp"
+ #include "synthesizer.h"
+ 
+ #include <algorithm>
+@@ -106,6 +107,7 @@
+ }
+ 
+ Voice Synthesizer::voice_from_latent(std::vector<float> latent) {
++    bench::Scope speaker_timer("speaker_encode");
+     Voice v;
+     v.frames = (int) (latent.size() / codec_.latent_dim());
+     v.latent = std::move(latent);
+@@ -156,7 +158,7 @@
+         Timer t{st.text};
+         const std::string text = normalize_text(r.text);
+         if (text.empty()) throw Error(Fault::InvalidArgument, "the text is empty after normalization; give a text to speak", "text");
+-        const std::vector<int32_t> ids = tokenizer_.encode(text);
++        const std::vector<int32_t> ids = [&]{bench::Scope t("text_tokenize");return tokenizer_.encode(text);}();
+         tokens = (int) ids.size();
+         if (tokens > text_.max_tokens()) {
+             throw Error(Fault::OutOfRange, "the text is " + std::to_string(tokens) + " tokens long and Irodori-TTS takes at most " +
+@@ -166,7 +168,7 @@
+         // The caption is tokenized as it is, after <s>, as the runtime's caption tokenizer takes it.
+         std::vector<int32_t> caption_ids;
+         if (!caption.empty()) {
+-            caption_ids = tokenizer_.encode(caption);
++            caption_ids = [&]{bench::Scope t("caption_tokenize");return tokenizer_.encode(caption);}();
+             caption_tokens = (int) caption_ids.size();
+             const int most = (int) model_->u32("irodori-tts.caption.max_tokens");
+             if (caption_tokens > most) {
+@@ -175,6 +177,11 @@
+                             "instructions");
+             }
+         }
++        if(bench::active) {
++            {bench::Scope p("text_encode_probe");Graph probe;auto st=text_.build(probe,ids);probe.output(st);probe.compute(backend_,allocr_);Graph::read(st);}
++            if(!caption_ids.empty()){bench::Scope p("caption_encode_probe");Graph probe;auto st=text_.build(probe,caption_ids,Condition::Caption);probe.output(st);probe.compute(backend_,allocr_);Graph::read(st);}
++        }
++        bench::Scope actual_encoder_timer("text_caption_duration_fused");
+         Graph g;
+         ggml_tensor * state = text_.build(g, ids);
+         g.output(state);
+--- a/src/families/irodori-tts/sampler.cpp
++++ b/src/families/irodori-tts/sampler.cpp
+@@ -1,3 +1,4 @@
++#include "profile.hpp"
+ #include "sampler.h"
+ 
+ #include <algorithm>
+@@ -210,6 +211,7 @@
+     const float t = times[step], t_next = times[step + 1];
+     std::vector<float> scales;
+     const std::vector<Branch> b = branches(step, t, g, &scales);
++    bench::Scope forward_timer("dit_forward"); forward_timer.batch=(int)b.size(); forward_timer.frames=frames;
+     Graph graph;
+     ggml_tensor * result = dit_.build(graph, x, frames, t, t - t_next, c, b, speaker_scale(g, times, step));
+     graph.output(result);
+@@ -238,10 +240,12 @@
+ 
+ std::vector<float> Sampler::sample(const Conditions & c, std::vector<float> x, int frames, int steps, const Guidance & g,
+                                    const std::function<bool(double done)> & progress) {
++    bench::Scope sample_timer("sampling");
+     const std::vector<float> times = schedule(steps, g.sway);
+     if (g.truncation) {
+         for (float & v : x) v = v * *g.truncation;
+     }
++    bench::Scope loop_timer("sampling_loop");
+     for (int i = 0; i < steps; i++) {
+         if (progress && !progress((double) i / steps)) return {};
+         const std::vector<float> v = velocity(c, x, frames, times, i, g);
+--- a/src/families/irodori-tts/reference.cpp
++++ b/src/families/irodori-tts/reference.cpp
+@@ -1,3 +1,4 @@
++#include "profile.hpp"
+ #include "reference.h"
+ 
+ #include <cmath>
+@@ -14,6 +15,8 @@
+     : max_seconds(m.f32("irodori-tts.reference.max_seconds")), lufs(m.f32("irodori-tts.reference.lufs")) {}
+ 
+ EncodedReference encode_reference(Codec & codec, const std::string & wav_path, const ReferenceRules & rules) {
++    bench::Scope reference_timer("reference_encode");
++    bench::Scope prep("reference_preprocess");
+     const Wav wav = read_wav(wav_path);
+     const Resampler resample = [&] {
+         try {
+@@ -30,6 +33,7 @@
+     }
+     std::vector<float> audio = resample(std::move(mono));
+     audio = rules.lufs ? normalize_loudness(audio, codec.sample_rate(), *rules.lufs) : bound_peak(std::move(audio));
++    prep.finish();
+     return {codec.encode(audio), seconds, wav.sample_rate};
+ }
+ 

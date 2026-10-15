@@ -1,0 +1,213 @@
+--- a/src/bench_profile.rs
++++ b/src/bench_profile.rs
+@@ -0,0 +1,18 @@
++use std::{cell::RefCell,time::Instant};
++use serde_json::{Value,json};
++thread_local! {
++    static ENABLED: RefCell<bool> = const { RefCell::new(false) };
++    static EVENTS: RefCell<Vec<Value>> = const { RefCell::new(Vec::new()) };
++    static DEVICE: RefCell<Option<burn::tensor::Device>> = const { RefCell::new(None) };
++}
++pub fn device(d: burn::tensor::Device) { DEVICE.with(|v| *v.borrow_mut()=Some(d)); }
++fn sync(){ DEVICE.with(|d| {if let Some(d)=d.borrow().as_ref(){d.sync().expect("GPU synchronization failed");}}); }
++pub fn begin(enabled:bool){ENABLED.with(|e| *e.borrow_mut()=enabled);EVENTS.with(|e| e.borrow_mut().clear());}
++pub fn take()->Vec<Value>{EVENTS.with(|e| e.borrow().clone())}
++pub struct Scope { name: &'static str, start:Instant, enabled:bool, gpu:bool, shape:Vec<usize> }
++impl Scope {
++    pub fn new(name:&'static str)->Self{let enabled=ENABLED.with(|e| *e.borrow());if enabled{sync();}Self{name,start:Instant::now(),enabled,gpu:true,shape:Vec::new()}}
++    pub fn cpu(name:&'static str)->Self{Self{name,start:Instant::now(),enabled:ENABLED.with(|e| *e.borrow()),gpu:false,shape:Vec::new()}}
++    pub fn shape(&mut self,shape:Vec<usize>){self.shape=shape;}
++}
++impl Drop for Scope {fn drop(&mut self){if self.enabled{if self.gpu{sync();}EVENTS.with(|e|e.borrow_mut().push(json!({"stage":self.name,"ms":self.start.elapsed().as_secs_f64()*1000.,"shape":self.shape})));}}}
+--- a/src/inference.rs
++++ b/src/inference.rs
+@@ -573,6 +573,8 @@
+         condition: EncodedCondition,
+         cancellation: &crate::rf::CancellationToken,
+     ) -> crate::Result<Tensor<3>> {
++        let _bench_scope = crate::bench_profile::Scope::new("sampling");
++
+         cancellation.check()?;
+         let mut prepared = self.prepare_sampling_request(request)?;
+         let [batch, sequence, dim] = condition.text_state.dims();
+--- a/src/lib.rs
++++ b/src/lib.rs
+@@ -119,3 +119,5 @@
+     ModelCheckpointLoader, load_model, load_model_exact_only, load_model_with_float_dtype,
+     load_model_with_float_dtype_and_loader, load_model_with_loader,
+ };
++
++pub mod bench_profile;
+--- a/src/codec/model.rs
++++ b/src/codec/model.rs
+@@ -205,6 +205,8 @@
+ 
+     /// Encode with the production fused WGSL Snake activations.
+     pub fn encode_wgsl(&self, wav: Tensor<3>) -> Tensor<3> {
++        let _bench_scope = crate::bench_profile::Scope::new("codec_encode");
++
+         let wav = self.pad_to_hop_length(wav);
+         let z = self.encoder.forward_wgsl(wav);
+         self.bottleneck.encode_wgsl(z).swap_dims(1, 2)
+--- a/src/codec/streaming.rs
++++ b/src/codec/streaming.rs
+@@ -41,6 +41,8 @@
+         window: DecodeWindow,
+         mut sink: impl FnMut(&[f32]) -> Result<ControlFlow<()>>,
+     ) -> Result<DecodeStreamReport> {
++        let _bench_scope = crate::bench_profile::Scope::new("codec_decode");
++
+         let [batch, frames, dim] = latent.dims();
+         if batch != 1
+             || frames < 2
+--- a/src/rf/euler_sampler.rs
++++ b/src/rf/euler_sampler.rs
+@@ -1428,6 +1428,7 @@
+             report.fixed_timestep_condition.request_selected =
+                 fixed_cond_cache.is_some() && batch_size == 1;
+         }
++        let _loop_scope=crate::bench_profile::Scope::new("sampling_loop");
+         for (step, interval) in schedule.windows(2).enumerate() {
+             recorder.check_cancelled()?;
+             let (t, next) = (interval[0], interval[1]);
+@@ -1820,6 +1821,7 @@
+     };
+ 
+     // --- Euler / Heun / PLMS-4 ODE loop ---
++    let _loop_scope=crate::bench_profile::Scope::new("sampling_loop");
+     for i in 0..params.num_steps {
+         recorder.check_cancelled()?;
+         let t = t_schedule[i];
+--- a/src/synthesis/engine.rs
++++ b/src/synthesis/engine.rs
+@@ -173,12 +173,15 @@
+ 
+     /// Encode each reference at its own loudness, then concatenate its latents.
+     pub fn create_voice(&self, recordings: &[PathBuf], target_lufs: Option<f64>) -> Result<Voice> {
++        let _bench_scope = crate::bench_profile::Scope::new("reference_encode");
++
+         if recordings.is_empty() || !self.config.use_speaker_condition() {
+             return Err(IrodoriError::Config(
+                 "voice creation needs recordings and a speaker-conditioned model".into(),
+             ));
+         }
+         let max_seconds = self.config.ref_max_seconds.unwrap_or(120.0).min(120.0);
++        let _prep=crate::bench_profile::Scope::cpu("reference_preprocess");
+         let mut prepared = Vec::with_capacity(recordings.len());
+         let mut total_seconds = 0.0;
+         for path in recordings {
+@@ -192,9 +195,12 @@
+             audio::normalize_loudness(&mut mono, rate, target_lufs)?;
+             prepared.push(audio::resample(&mono, rate, DACVAE_SAMPLE_RATE as u32)?);
+         }
++        drop(_prep);
++        let _codec_load=crate::bench_profile::Scope::new("reference_codec_load");
+         let mut encoder =
+             crate::codec::load_codec_with_float_dtype(&self.codec_path, &self.device, DType::F32)?;
+         encoder.prepare_encoder_for_wgsl();
++        drop(_codec_load);
+         let mut values = Vec::new();
+         for mut audio in prepared {
+             let count = audio.len();
+--- a/src/synthesis/text.rs
++++ b/src/synthesis/text.rs
+@@ -79,6 +79,7 @@
+     }
+ 
+     pub fn encode(&self, text: &str, caption: bool, device: &Device) -> Result<Tokens> {
++        let _tok=crate::bench_profile::Scope::cpu(if caption {"caption_tokenize"} else {"text_tokenize"});
+         let mut ids = self.ids(text)?;
+         let limit = if caption {
+             self.max_caption
+@@ -101,6 +102,7 @@
+             .map(i32::try_from)
+             .collect::<std::result::Result<Vec<_>, _>>()
+             .map_err(|e| IrodoriError::Tokenizer(e.to_string()))?;
++        drop(_tok);
+         Ok(Tokens {
+             ids: Tensor::from_data(TensorData::new(ids, [1, width]), device),
+             mask: Tensor::from_data(TensorData::new(vec![count > 0; width], [1, width]), device),
+--- a/src/model/wgsl.rs
++++ b/src/model/wgsl.rs
+@@ -502,6 +502,9 @@
+         kv_caches: Option<&[CondKvCache]>,
+         lat_rope: &RopeFreqs,
+     ) -> Tensor<3> {
++        let mut _bench_scope = crate::bench_profile::Scope::new("dit_forward");
++        _bench_scope.shape(x_t.dims().to_vec());
++
+         let cross_layer_adaln = precomputed_adaln.or_else(|| {
+             nvtx_range!(
+                 "adaln_cross_layer_precompute",
+--- a/src/model/dit/aux_conditioner.rs
++++ b/src/model/dit/aux_conditioner.rs
+@@ -133,11 +133,8 @@
+                 })
+             }
+             Self::Pretrained(frontend) => {
+-                let text_state = frontend.text_norm.forward(
+-                    frontend
+-                        .shared
+-                        .encode_text(text_input_ids, text_mask.clone()),
+-                );
++                let text_state = {let _p=crate::bench_profile::Scope::new("text_encode"); frontend.text_norm.forward(
++                    frontend.shared.encode_text(text_input_ids, text_mask.clone()))};
+                 let aux = frontend.encode_aux(aux_input, speaker_patch_size)?;
+                 Ok(EncodedCondition {
+                     text_state,
+@@ -231,6 +228,8 @@
+         ids: burn::tensor::Tensor<2, burn::tensor::Int>,
+         mask: Tensor<2, Bool>,
+     ) -> crate::error::Result<(Tensor<3>, Tensor<2, Bool>)> {
++        let _bench_scope = crate::bench_profile::Scope::new("caption_encode");
++
+         let norm = self.caption_norm.as_ref().ok_or_else(|| {
+             crate::error::IrodoriError::Config(
+                 "caption input supplied to a pretrained frontend without caption conditioning"
+@@ -440,6 +439,8 @@
+     ref_mask: Tensor<2, Bool>,
+     speaker_patch_size: usize,
+ ) -> crate::error::Result<(Tensor<3>, Tensor<2, Bool>)> {
++        let _bench_scope = crate::bench_profile::Scope::new("speaker_encode");
++
+     let (patched_latent, patched_mask) =
+         patch_sequence_with_mask(ref_latent, ref_mask, speaker_patch_size)?;
+     let state = conditioner.norm.forward(
+--- a/examples/comparison_bench.rs
++++ b/examples/comparison_bench.rs
+@@ -0,0 +1,35 @@
++use std::{io::{self,BufRead,Write},path::PathBuf,time::Instant};
++use serde_json::{Value,json};
++use irodori_tts_burn::{backend_config,WgpuFloatPrecision,synthesis::{SynthesisEngine,SynthesisModelPaths,SynthesisRequest}};
++fn emit(v:Value){println!("BENCH {v}");io::stdout().flush().unwrap();}
++fn main()->anyhow::Result<()> {
++    let a:Vec<String>=std::env::args().collect();let root=PathBuf::from(&a[1]);let variant=&a[2];let t=Instant::now();
++    let precision=WgpuFloatPrecision::Fp32;
++    let selected="discrete:0".parse::<backend_config::DeviceSelector>()?;
++    let device=backend_config::wgpu_device_with_precision(&selected.device(),precision)?;
++    irodori_tts_burn::bench_profile::device(device.clone());
++    let mut engine=SynthesisEngine::load(SynthesisModelPaths{checkpoint:root.join(format!("models/{variant}/model.safetensors")),
++        codec:root.join("artifacts/codec/dacvae.safetensors"),tokenizer:None},device.clone(),precision)?;
++    device.sync().map_err(|e|anyhow::anyhow!("{e:?}"))?;
++    emit(json!({"type":"ready","load_ms":t.elapsed().as_secs_f64()*1000.,"precision":"fp32","device":"Vulkan discrete:0"}));
++    let mut cached=false;
++    for line in io::stdin().lock().lines(){let r:Value=serde_json::from_str(&line?)?;if r["type"]=="stop"{break;}
++        irodori_tts_burn::bench_profile::begin(r["profile"].as_bool().unwrap_or(false));
++        let t=Instant::now();let hit=cached && r["cache"]=="native_cache";
++        if !hit {let _p=irodori_tts_burn::bench_profile::Scope::new("reference_total");
++            let voice=engine.create_voice(&[root.join("artifacts/benchmark/inputs/reference.wav")],Some(-16.))?;
++            engine.add_voice("reference",voice)?;cached=true;}
++        let mut req=SynthesisRequest {text:r["text"].as_str().unwrap().into(),instructions:"自然な日本語で、落ち着いた口調で話す。".into(),
++            voice:"reference".into(),steps:Some(if variant=="rf"{40}else{4}),seed:Some(42),seconds:r["seconds"].as_f64(),keep_tail:true,
++            ..SynthesisRequest::default()};
++        if variant=="rf"{req.cfg_scale_text=Some(3.);req.cfg_scale_instructions=Some(3.);req.cfg_scale_speaker=Some(5.);
++           req.cfg_guidance_mode=Some(irodori_tts_burn::CfgGuidanceMode::Independent);req.cfg_min_t=Some(0.5);req.cfg_max_t=Some(1.);req.sway_coeff=Some(0.);}
++        let (audio,report)=engine.synthesize(&req)?;device.sync().map_err(|e|anyhow::anyhow!("{e:?}"))?;
++        let ms=t.elapsed().as_secs_f64()*1000.;
++        if let Some(path)=r["output"].as_str(){let mut f=std::fs::File::create(path)?;for v in &audio{f.write_all(&v.to_le_bytes())?;}}
++        let rms=(audio.iter().map(|v|v*v).sum::<f32>()/audio.len() as f32).sqrt();
++        emit(json!({"type":"result","id":r["id"],"ms":ms,"samples":audio.len(),"sample_rate":report.sample_rate,
++            "frames":audio.len().div_ceil(1920),"events":irodori_tts_burn::bench_profile::take(),"finite":audio.iter().all(|v|v.is_finite()),
++            "rms":rms,"reference_cache_hit":hit}));
++    }Ok(())
++}

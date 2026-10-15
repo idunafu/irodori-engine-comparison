@@ -1,0 +1,19 @@
+{
+  "reference": "TYC054.wav",
+  "caption": "自然な日本語で、落ち着いた口調で話す。",
+  "seed": 42,
+  "steps": {"rf": 40, "mf": 4},
+  "threads": 8,
+  "warmup": 2,
+  "repeats": 5,
+  "cold_repeats": 3,
+  "vram_interval_ms": 10,
+  "timeout_seconds": 1800,
+  "precision_profiles": ["fp32", "practical"],
+  "cache_profiles": ["reencode", "native_cache"],
+  "duration_profiles": ["matched", "auto", "text_scaling", "audio_scaling"],
+  "audio_seconds": [2, 4, 8, 16, 24],
+  "cfg": {"guidance_mode": "independent", "text": 3, "caption": 3, "speaker": 5, "min_t": 0.5, "max_t": 1.0},
+  "watermark": false,
+  "trim_tail": false
+}

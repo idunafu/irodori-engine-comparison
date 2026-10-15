@@ -1,0 +1,215 @@
+--- a/crates/irodori/Cargo.toml
++++ b/crates/irodori/Cargo.toml
+@@ -37,3 +37,7 @@
+ rand_distr = "0.5"
+ regex = "1"
+ sttts-hub = { path = "../hub" }
++
++[[example]]
++name = "comparison_bench"
++required-features = ["gpu"]
+--- a/crates/irodori/src/bench_profile.rs
++++ b/crates/irodori/src/bench_profile.rs
+@@ -0,0 +1,18 @@
++use std::{cell::RefCell,time::Instant};
++use serde_json::{Value,json};
++thread_local! {
++    static ENABLED: RefCell<bool> = const { RefCell::new(false) };
++    static EVENTS: RefCell<Vec<Value>> = const { RefCell::new(Vec::new()) };
++    static DEVICE: RefCell<Option<burn::tensor::Device>> = const { RefCell::new(None) };
++}
++pub fn device(d: burn::tensor::Device) { DEVICE.with(|v| *v.borrow_mut()=Some(d)); }
++fn sync(){ DEVICE.with(|d| {if let Some(d)=d.borrow().as_ref(){d.sync().expect("GPU synchronization failed");}}); }
++pub fn begin(enabled:bool){ENABLED.with(|e| *e.borrow_mut()=enabled);EVENTS.with(|e| e.borrow_mut().clear());}
++pub fn take()->Vec<Value>{EVENTS.with(|e| e.borrow().clone())}
++pub struct Scope { name: &'static str, start:Instant, enabled:bool, gpu:bool, shape:Vec<usize> }
++impl Scope {
++    pub fn new(name:&'static str)->Self{let enabled=ENABLED.with(|e| *e.borrow());if enabled{sync();}Self{name,start:Instant::now(),enabled,gpu:true,shape:Vec::new()}}
++    pub fn cpu(name:&'static str)->Self{Self{name,start:Instant::now(),enabled:ENABLED.with(|e| *e.borrow()),gpu:false,shape:Vec::new()}}
++    pub fn shape(&mut self,shape:Vec<usize>){self.shape=shape;}
++}
++impl Drop for Scope {fn drop(&mut self){if self.enabled{if self.gpu{sync();}EVENTS.with(|e|e.borrow_mut().push(json!({"stage":self.name,"ms":self.start.elapsed().as_secs_f64()*1000.,"shape":self.shape})));}}}
+--- a/crates/irodori/src/condition.rs
++++ b/crates/irodori/src/condition.rs
+@@ -150,6 +150,8 @@
+     /// `text_state = text_norm(text_encoder(backbone, ids, mask))`。`[B,S,text_dim]`。
+     /// マスクは呼び出し側が持つ(`encode_conditions.out1` はトークナイザのマスクそのもの)。
+     pub fn encode_text(&self, ids: &[Vec<i64>], mask: &[Vec<bool>]) -> Tensor<3> {
++        let _bench_scope = crate::bench_profile::Scope::new("text_encode");
++
+         let state = self.backbone.forward(ids, mask);
+         let proj = self.text_encoder.forward(state, mask_tensor(mask, &self.device));
+         rms_norm(proj, &self.text_norm, self.eps)
+@@ -158,6 +160,8 @@
+     /// `caption_state = caption_norm(caption_encoder(backbone, ids, mask))`。`[B,S,caption_dim]`。
+     /// キャプション条件が無効なモデルでは None。空キャプションは [`caption_inputs`] でマスク全 false にしておく。
+     pub fn encode_caption(&self, ids: &[Vec<i64>], mask: &[Vec<bool>]) -> Option<Tensor<3>> {
++        let _bench_scope = crate::bench_profile::Scope::new("caption_encode");
++
+         let (proj, norm) = self.caption.as_ref()?;
+         let state = self.backbone.forward(ids, mask);
+         let p = proj.forward(state, mask_tensor(mask, &self.device));
+@@ -173,6 +177,8 @@
+     max_len: usize,
+     add_bos: bool,
+ ) -> Result<Encoded> {
++        let _bench_scope = crate::bench_profile::Scope::new("caption_tokenize");
++
+     let text = caption.unwrap_or("").trim().to_string();
+     let texts = vec![text.clone(); batch];
+     let (ids, mut mask) = tok.batch_encode(&texts, max_len, add_bos)?;
+--- a/crates/irodori/src/pipeline.rs
++++ b/crates/irodori/src/pipeline.rs
+@@ -345,7 +345,7 @@
+         // --- テキスト・キャプション
+         let text = normalize_text(&req.text).trim().to_string();
+         ensure!(!text.is_empty(), "text became empty after normalization.");
+-        let (ids, mask) = self.tokenizer.batch_encode(std::slice::from_ref(&text), self.cfg.max_text_len, self.cfg.text_add_bos)?;
++        let (ids, mask) = {let _t=crate::bench_profile::Scope::cpu("text_tokenize"); self.tokenizer.batch_encode(std::slice::from_ref(&text), self.cfg.max_text_len, self.cfg.text_add_bos)?};
+         // パディングは右詰めで、無効トークンは注意から完全に除外される(マスク -1e9 → 確率 0)ので、
+         // 有効な先頭部分だけで計算しても結果は同じ。256 トークン固定のまま回すより桁違いに速い。
+         // ただし長さは段階(バケット)に揃えてパディングする。GPU のカーネルは形状ごとに作られ、初回は
+@@ -534,8 +534,10 @@
+ 
+     /// 参照音声 → DACVAE 潜在 `[1, T, latent_dim]`(最大長でトリム)
+     pub fn encode_reference(&self, path: &Path, req: &SamplingRequest, messages: &mut Vec<String>) -> Result<Tensor<3>> {
++        let _bench_scope = crate::bench_profile::Scope::new("reference_encode");
++
+         let max_ref_seconds = req.max_ref_seconds.or(self.cfg.ref_max_seconds).unwrap_or(30.0);
+-        let (channels, sr) = load_audio(path)?;
++        let (channels, sr) = {let _t=crate::bench_profile::Scope::cpu("reference_file_read");load_audio(path)?};
+         let n = channels[0].len();
+         ensure!(n > 0, "empty reference audio: {}", path.display());
+         let mut keep = n;
+--- a/crates/irodori/src/lib.rs
++++ b/crates/irodori/src/lib.rs
+@@ -37,3 +37,5 @@
+ pub mod tokenizer;
+ pub mod watermark;
+ pub mod weights;
++
++pub mod bench_profile;
+--- a/crates/irodori/src/dit.rs
++++ b/crates/irodori/src/dit.rs
+@@ -566,6 +566,8 @@
+         reference: Option<(Tensor<3>, Tensor<2>)>,
+         batch: usize,
+     ) -> Result<(Tensor<3>, Tensor<2>)> {
++        let _bench_scope = crate::bench_profile::Scope::new("speaker_encode");
++
+         let enc = self.speaker_encoder.as_ref().context("model has no speaker conditioning")?;
+         let norm = self.speaker_norm.as_ref().unwrap();
+         let dim = self.cfg.speaker_dim.unwrap();
+@@ -692,6 +694,9 @@
+     /// [`Self::prepare`] 済みの共通部分を使って 1 ステップ進める。`t` / `delta_t` はホスト側の値(バッチ長)。
+     /// `delta_t` は MeanFlow では必須、RF では None。
+     pub fn forward_prepared(&self, x_t: Tensor<3>, t: &[f32], delta_t: Option<&[f32]>, p: &Prepared) -> Result<Tensor<3>> {
++        let mut _bench_scope = crate::bench_profile::Scope::new("dit_forward");
++        _bench_scope.shape(x_t.dims().to_vec());
++
+         let [b, s, _] = x_t.dims();
+         ensure!(b == p.batch && s == p.seq_len, "x_t shape {:?} != prepared ({}, {})", x_t.dims(), p.batch, p.seq_len);
+         ensure!(t.len() == b, "t must have batch size {b}");
+--- a/crates/irodori/src/codec.rs
++++ b/crates/irodori/src/codec.rs
+@@ -384,6 +384,8 @@
+     /// 先頭・末尾は全体版と同じゼロ詰めになる(文脈は信号の端でクリップ)。
+     /// 受容野より `context` が大きければ全体版とほぼ一致する。
+     pub fn decode_latent_windowed(&self, z: Tensor<3>, window: usize, context: usize) -> Tensor<3> {
++        let _bench_scope = crate::bench_profile::Scope::new("codec_decode");
++
+         let [_, t, _] = z.dims();
+         let window = window.max(1);
+         // どの窓も同じ長さ(window + 2*context フレーム)でデコードする。GPU のカーネルは形状の
+@@ -418,6 +420,9 @@
+         normalize_db: Option<f32>,
+         ensure_max: bool,
+     ) -> Result<Tensor<3>> {
++        let _bench_scope = crate::bench_profile::Scope::new("codec_encode");
++
++        let _prep=crate::bench_profile::Scope::new("reference_preprocess_in_codec");
+         let [b, c, n] = wav.dims();
+         let data = wav.try_into_data().map_err(|e| anyhow::anyhow!("GPU からの読み戻しに失敗しました: {e:?}"))?.convert::<f32>().try_to_vec::<f32>().map_err(|e| anyhow::anyhow!("{e:?}"))?;
+         let mut all: Vec<f32> = Vec::new();
+@@ -462,6 +467,7 @@
+             len = x.len();
+             all.extend_from_slice(&x);
+         }
++        drop(_prep);
+         let t = Tensor::<3>::from_data(TensorData::new(all, [b, 1, len]), &self.device);
+         let z = self.in_proj.forward(self.encoder.forward(t));
+         let mean = z.narrow(1, 0, self.latent_dim);
+--- a/crates/irodori/src/sampler.rs
++++ b/crates/irodori/src/sampler.rs
+@@ -56,6 +56,8 @@
+     noise: Option<Tensor<3>>,
+     seed: u64,
+ ) -> Result<Tensor<3>> {
++        let _bench_scope = crate::bench_profile::Scope::new("sampling");
++
+     ensure!(steps > 0, "MeanFlow steps must be positive");
+     ensure!(padded_len >= seq_len, "padded_len < seq_len");
+     let batch = cond.batch();
+@@ -73,6 +75,7 @@
+     }
+     let prepared = dit.prepare(cond, padded_len, seq_len)?;
+     let sched = meanflow_schedule(steps);
++    let _loop_scope=crate::bench_profile::Scope::new("sampling_loop");
+     for i in 0..steps {
+         let (t, next) = (sched[i], sched[i + 1]);
+         let v = dit.forward_prepared(x.clone(), &vec![t; batch], Some(&vec![t - next; batch]), &prepared)?;
+@@ -297,6 +300,8 @@
+     noise: Option<Tensor<3>>,
+     seed: u64,
+ ) -> Result<Tensor<3>> {
++        let _bench_scope = crate::bench_profile::Scope::new("sampling");
++
+     ensure!(!dit.is_meanflow(), "sample_euler_rf_cfg needs an RF checkpoint (this one is MeanFlow)");
+     ensure!(padded_len >= seq_len, "padded_len < seq_len");
+     let batch = cond.batch();
+@@ -379,6 +384,7 @@
+ 
+     // IRODORI_TRACE: ステップごとの時間(読み戻して実行を完了させるので、計測時だけ)
+     let trace = std::env::var_os("IRODORI_TRACE").is_some();
++    let _loop_scope=crate::bench_profile::Scope::new("sampling_loop");
+     for i in 0..opts.steps {
+         let (t, next) = (sched[i], sched[i + 1]);
+         let use_cfg = !guided.is_empty() && (opts.cfg_min_t..=opts.cfg_max_t).contains(&f64::from(t));
+--- a/crates/irodori/examples/comparison_bench.rs
++++ b/crates/irodori/examples/comparison_bench.rs
+@@ -0,0 +1,35 @@
++use std::{io::{self,BufRead,Write},path::PathBuf,time::Instant};
++use serde_json::{Value,json};
++use irodori::pipeline::{Tts,TtsPaths,SamplingRequest};
++fn emit(v:Value){println!("BENCH {v}");io::stdout().flush().unwrap();}
++fn main()->anyhow::Result<()> {
++    let a:Vec<String>=std::env::args().collect();let root=PathBuf::from(&a[1]);let variant=&a[2];
++    let t=Instant::now();let device=irodori::try_gpu_device()?;
++    irodori::bench_profile::device(device.clone());
++    let tts=Tts::load(&TtsPaths {model_weights:root.join(format!("models/{variant}/model.safetensors")),
++        tokenizer_dir:root.join(format!("models/{variant}/tokenizer")),codec_weights:root.join("models/codec/weights.pth"),watermark_dir:None},&device)?;
++    device.sync().map_err(|e|anyhow::anyhow!("{e:?}"))?;
++    emit(json!({"type":"ready","load_ms":t.elapsed().as_secs_f64()*1000.,"precision":"fp32","device":"Vulkan discrete:0"}));
++    let mut cached=None;
++    for line in io::stdin().lock().lines(){let r:Value=serde_json::from_str(&line?)?;if r["type"]=="stop"{break;}
++        let profile=r["profile"].as_bool().unwrap_or(false);irodori::bench_profile::begin(profile);
++        let mut req=SamplingRequest {text:r["text"].as_str().unwrap().into(),
++            caption:Some("自然な日本語で、落ち着いた口調で話す。".into()),
++            ref_wav:Some(root.join("artifacts/benchmark/inputs/reference.wav")),no_ref:false,
++            num_steps:Some(if variant=="rf"{40}else{4}),seed:Some(42),seconds:r["seconds"].as_f64(),
++            watermark:false,trim_tail:false,cfg_scale_text:3.,cfg_scale_caption:3.,cfg_scale_speaker:5.,
++            cfg_min_t:0.5,cfg_max_t:1.,..SamplingRequest::default()};
++        let t=Instant::now();let mut hit=false;
++        if r["cache"]=="native_cache" {
++            if cached.is_some(){hit=true;}else{cached=Some(tts.encode_reference(req.ref_wav.as_ref().unwrap(),&req,&mut Vec::new())?);}
++            req.ref_latent=cached.clone();
++        }
++        let out=tts.synthesize(&req)?;
++        let ms=t.elapsed().as_secs_f64()*1000.;
++        if let Some(path)=r["output"].as_str(){let mut f=std::fs::File::create(path)?;for v in &out.audio{f.write_all(&v.to_le_bytes())?;}}
++        let rms=(out.audio.iter().map(|v|v*v).sum::<f32>()/out.audio.len() as f32).sqrt();
++        emit(json!({"type":"result","id":r["id"],"ms":ms,"samples":out.audio.len(),"sample_rate":out.sample_rate,
++            "frames":out.audio.len().div_ceil(1920),"events":irodori::bench_profile::take(),"stages":out.timings,
++            "finite":out.audio.iter().all(|v|v.is_finite()),"rms":rms,"reference_cache_hit":hit}));
++    }Ok(())
++}

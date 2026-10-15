@@ -1,0 +1,60 @@
+{
+  "rf": {
+    "repository": "Aratako/Irodori-TTS-v4.1-Small",
+    "revision": "2b28324dc263ed5e6638b3cf3dd94c82ead07b4b",
+    "files": [
+      "model.safetensors",
+      "tokenizer/*",
+      "README.md"
+    ]
+  },
+  "mf": {
+    "repository": "Aratako/Irodori-TTS-v4.1-Small-MF",
+    "revision": "ccc78f5d480b6e51b69b2d5042a14c4da04fea6e",
+    "files": [
+      "model.safetensors",
+      "tokenizer/*",
+      "README.md"
+    ]
+  },
+  "codec": {
+    "repository": "Aratako/Semantic-DACVAE-Japanese-32dim",
+    "revision": "47376ee24834d7a05a48ebabfe3cde29b3c5e214",
+    "files": [
+      "weights.pth",
+      "README.md"
+    ]
+  },
+  "speech-rf": {
+    "repository": "sakasegawa/Irodori-TTS-v4.1-Small-GGUF",
+    "revision": "66fe2cde1973fd44e7202fbe36df722103958188",
+    "files": [
+      "Irodori-TTS-859M-v4.1-F16.gguf",
+      "Irodori-TTS-859M-v4.1-F16.gguf.json",
+      "README.md"
+    ]
+  },
+  "speech-mf": {
+    "repository": "sakasegawa/Irodori-TTS-v4.1-Small-MF-GGUF",
+    "revision": "9db7da1bec3d1069ef8e29732e0497be60c7b047",
+    "files": [
+      "Irodori-TTS-866M-MF-v4.1-F16.gguf",
+      "Irodori-TTS-866M-MF-v4.1-F16.gguf.json",
+      "README.md"
+    ]
+  },
+  "audio-rf": {
+    "repository": "audio-cpp/audio.cpp-gguf",
+    "revision": "f861648c0c1f4da9f18e9a0ce5e217b0679bb2f5",
+    "files": [
+      "Irodori-TTS-v4-Small-GGUF/irodori-tts-v4-small-f16.gguf"
+    ]
+  },
+  "watermark": {
+    "repository": "sony/silentcipher",
+    "revision": "a1c4d021905e0dc5b24be5f68db5fc4dba410ee1",
+    "files": [
+      "*"
+    ]
+  }
+}

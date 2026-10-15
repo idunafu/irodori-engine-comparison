@@ -1,0 +1,5 @@
+[project]
+name = "irodori-engine-benchmark"
+version = "0.1.0"
+requires-python = "==3.10.*"
+dependencies = ["numpy==2.2.6", "soundfile==0.13.1", "matplotlib==3.10.8", "nvidia-ml-py==13.580.82", "tokenizers==0.22.2", "gguf==0.17.1"]
