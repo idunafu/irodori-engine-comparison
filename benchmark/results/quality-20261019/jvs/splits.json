@@ -1,0 +1,38 @@
+{
+  "diagnostic_jkyb": [],
+  "pilot_jkyb": [],
+  "diagnostic_jvs": [
+    "jvs090",
+    "jvs099",
+    "jvs061",
+    "jvs034",
+    "jvs030",
+    "jvs006",
+    "jvs026",
+    "jvs086",
+    "jvs015",
+    "jvs089",
+    "jvs096",
+    "jvs046",
+    "jvs040",
+    "jvs050",
+    "jvs064",
+    "jvs077",
+    "jvs056",
+    "jvs052",
+    "jvs084",
+    "jvs011"
+  ],
+  "pilot_jvs": [
+    "jvs064",
+    "jvs089",
+    "jvs015",
+    "jvs034",
+    "jvs090",
+    "jvs046",
+    "jvs061",
+    "jvs011",
+    "jvs096",
+    "jvs006"
+  ]
+}

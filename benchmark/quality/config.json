@@ -1,0 +1,25 @@
+{
+  "format": 1,
+  "seeds": [0, 1, 2, 3, 4],
+  "steps": {"rf": 40, "mf": 4},
+  "threads": 8,
+  "request_timeout": 1800,
+  "heartbeat_seconds": 30,
+  "consecutive_infrastructure_failures": 3,
+  "bootstrap_replicates": 2000,
+  "pilot": {"jkyb": 100, "jvs": 10},
+  "diagnostic": {"jkyb": 500, "jvs": 20},
+  "caption": "自然な日本語で、落ち着いた口調で話す。",
+  "jkyb_revision": "7d2d6a1c6df53d109bfe7386e7ecfa4d2b406e75",
+  "jkyb_evaluator": "9606471bc15f052bdda7c18eba6396cd31020528",
+  "speech_bench": "326441fd1a145d7245c7c9462f322bae9d2e9a07",
+  "jvs_url": "https://drive.google.com/uc?id=19oAw8wWn3Y7z6CKChRdAyGOB9yupL_Xt",
+  "models": {
+    "kana": {"repo": "sbintuitions/kana-whisper", "revision": "88ecb3d79c5846cb4fcf76f4107b84c8fa2acd82"},
+    "whisper": {"repo": "openai/whisper-large-v3-turbo", "revision": "41f01f3fe87f28c78e2fbf8b568835947dd65ed9"},
+    "qwen": {"repo": "sakasegawa/Qwen3-ASR-1.7B-GGUF", "revision": "75edaf1dd34c60409d3190dbcb36dbec70cad5ea", "file": "Qwen3-ASR-1.7B-Q8_0.gguf", "sha256": "5f219b78a1d9c3b9e97da27708b36f8a0bc1bfc1650b541c0a6dbaf87c9a62d0"},
+    "reazon": {"repo": "sakasegawa/reazonspeech-nemo-v2-GGUF", "revision": "cb9e436cf3f9d9563c610cb5318adcfc5c0fe098", "file": "reazonspeech-nemo-619M-v2-F16.gguf", "sha256": "1492147d7d18fbb0503db2cbbb05df4932cb3451e391524c6a2411632e4823bf"},
+    "campplus": {"repo": "csukuangfj/speaker-embedding-models", "revision": "0743f301363dec56491a490f6d6cbc9d67f9a3bf", "file": "3dspeaker_speech_campplus_sv_zh-cn_16k-common.onnx"},
+    "eres2net": {"repo": "csukuangfj/speaker-embedding-models", "revision": "0743f301363dec56491a490f6d6cbc9d67f9a3bf", "file": "3dspeaker_speech_eres2netv2_sv_zh-cn_16k-common.onnx", "sha256": "bf1a75b9930474cf3389ef415e6e5d38ca96fea4a3a00f7e301d080a58ee2239"}
+  }
+}

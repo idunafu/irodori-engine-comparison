@@ -1,0 +1,171 @@
+{
+  "included": [
+    "existing:p01",
+    "existing:p02",
+    "existing:p03",
+    "existing:p04",
+    "existing:p05",
+    "existing:p06",
+    "existing:p07",
+    "existing:p08",
+    "existing:p09",
+    "existing:p10",
+    "existing:p11",
+    "existing:p12",
+    "speech-bench:aizuchi-aa",
+    "speech-bench:aizuchi-hai",
+    "speech-bench:aizuchi-naruhodo",
+    "speech-bench:aizuchi-unun",
+    "speech-bench:long-cause",
+    "speech-bench:long-plan",
+    "speech-bench:long-trip",
+    "speech-bench:mixed-github",
+    "speech-bench:mixed-slack",
+    "speech-bench:mixed-typescript",
+    "speech-bench:number-date",
+    "speech-bench:number-money",
+    "speech-bench:number-pin",
+    "speech-bench:question-confirm",
+    "speech-bench:question-which",
+    "speech-bench:reply-done",
+    "speech-bench:reply-meeting",
+    "speech-bench:reply-reminder",
+    "speech-bench:reply-sorry",
+    "speech-bench:reply-weather"
+  ],
+  "excluded": [
+    {
+      "item": "existing:p13",
+      "text": "今日はよく晴れています。朝は窓を開けて、新鮮な空気を部屋に入れました。昼休みには友人と近くの公園を歩き、帰りにパンを買いました。夕方になったら、家族と今日あったことを話そうと思います。朝は窓を開けて、新鮮な空気を部屋に入れました。昼休みには友人と近くの公園を歩き、帰りにパンを買いました。夕方になったら、家族と今日あったことを話そうと思います。朝は窓を開けて、新鮮な空気を部屋に入れました。",
+      "failed_cases": [
+        "speech-mf-f16",
+        "speech-rf-f16"
+      ],
+      "reason": "duration_limit"
+    },
+    {
+      "item": "existing:p14",
+      "text": "次の電車は三番線に到着します。ご乗車のお客様は黄色い線の内側でお待ちください。車内では携帯電話を静かな設定にして、周りの方への配慮をお願いします。お忘れ物のないよう、お降りの際には座席の周辺をご確認ください。ご乗車のお客様は黄色い線の内側でお待ちください。車内では携帯電話を静かな設定にして、周りの方への配慮をお願いします。お忘れ物のないよう、お降りの際には座席の周辺をご確認ください。ご乗車のお客様は黄色い線の内側でお待ちください。",
+      "failed_cases": [
+        "speech-mf-f16",
+        "speech-rf-f16"
+      ],
+      "reason": "duration_limit"
+    },
+    {
+      "item": "existing:p15",
+      "text": "水は温度によって姿を変えます。冷やすと氷になり、温めると蒸気になります。このような変化は身近な生活でも観察でき、料理や天気を理解する手がかりになります。条件を一つずつ変えて観察すると、原因と結果の関係が分かりやすくなります。冷やすと氷になり、温めると蒸気になります。このような変化は身近な生活でも観察でき、料理や天気を理解する手がかりになります。条件を一つずつ変えて観察すると、原因と結果の関係が分かりやすくなります。",
+      "failed_cases": [
+        "speech-mf-f16",
+        "speech-rf-f16"
+      ],
+      "reason": "duration_limit"
+    },
+    {
+      "item": "existing:p16",
+      "text": "小さな猫が窓の外を眺めていました。遠くの丘から、ゆっくりと風が吹いてきました。猫は耳を動かすと、机の上に置かれた古い地図を見つめ、まだ知らない町の景色を想像しました。やがて玄関の扉が開き、旅から戻った主人の声を聞くと、軽い足取りで迎えに走りました。遠くの丘から、ゆっくりと風が吹いてきました。猫は耳を動かすと、机の上に置かれた古い地図を見つめ、まだ知らない町の景色を想像しました。",
+      "failed_cases": [
+        "speech-mf-f16",
+        "speech-rf-f16"
+      ],
+      "reason": "duration_limit"
+    },
+    {
+      "item": "existing:p17",
+      "text": "今日はよく晴れています。朝は窓を開けて、新鮮な空気を部屋に入れました。昼休みには友人と近くの公園を歩き、帰りにパンを買いました。夕方になったら、家族と今日あったことを話そうと思います。朝は窓を開けて、新鮮な空気を部屋に入れました。昼休みには友人と近くの公園を歩き、帰りにパンを買いました。夕方になったら、家族と今日あったことを話そうと思います。朝は窓を開けて、新鮮な空気を部屋に入れました。昼休みには友人と近くの公園を歩き、帰りにパンを買いました。夕方になったら、家族と今日あったことを話そうと思います。朝は窓を開けて、新鮮な空気を部屋に入れました。",
+      "failed_cases": [
+        "speech-mf-f16",
+        "speech-rf-f16"
+      ],
+      "reason": "duration_limit"
+    },
+    {
+      "item": "existing:p18",
+      "text": "次の電車は三番線に到着します。ご乗車のお客様は黄色い線の内側でお待ちください。車内では携帯電話を静かな設定にして、周りの方への配慮をお願いします。お忘れ物のないよう、お降りの際には座席の周辺をご確認ください。ご乗車のお客様は黄色い線の内側でお待ちください。車内では携帯電話を静かな設定にして、周りの方への配慮をお願いします。お忘れ物のないよう、お降りの際には座席の周辺をご確認ください。ご乗車のお客様は黄色い線の内側でお待ちください。車内では携帯電話を静かな設定にして、周りの方への配慮をお願いします。お忘れ物のないよう、お降りの際には座席の周辺をご確認ください。",
+      "failed_cases": [
+        "speech-mf-f16",
+        "speech-rf-f16"
+      ],
+      "reason": "duration_limit"
+    },
+    {
+      "item": "existing:p19",
+      "text": "水は温度によって姿を変えます。冷やすと氷になり、温めると蒸気になります。このような変化は身近な生活でも観察でき、料理や天気を理解する手がかりになります。条件を一つずつ変えて観察すると、原因と結果の関係が分かりやすくなります。冷やすと氷になり、温めると蒸気になります。このような変化は身近な生活でも観察でき、料理や天気を理解する手がかりになります。条件を一つずつ変えて観察すると、原因と結果の関係が分かりやすくなります。冷やすと氷になり、温めると蒸気になります。このような変化は身近な生活でも観察でき、料理や天気を理解する手がかりになります。",
+      "failed_cases": [
+        "speech-mf-f16",
+        "speech-rf-f16"
+      ],
+      "reason": "duration_limit"
+    },
+    {
+      "item": "existing:p20",
+      "text": "小さな猫が窓の外を眺めていました。遠くの丘から、ゆっくりと風が吹いてきました。猫は耳を動かすと、机の上に置かれた古い地図を見つめ、まだ知らない町の景色を想像しました。やがて玄関の扉が開き、旅から戻った主人の声を聞くと、軽い足取りで迎えに走りました。遠くの丘から、ゆっくりと風が吹いてきました。猫は耳を動かすと、机の上に置かれた古い地図を見つめ、まだ知らない町の景色を想像しました。やがて玄関の扉が開き、旅から戻った主人の声を聞くと、軽い足取りで迎えに走りました。遠くの丘から、ゆっくりと風が吹いてきました。",
+      "failed_cases": [
+        "speech-mf-f16",
+        "speech-rf-f16"
+      ],
+      "reason": "duration_limit"
+    }
+  ],
+  "voice_items": [
+    "existing:p01",
+    "existing:p02",
+    "existing:p03",
+    "existing:p04",
+    "existing:p05",
+    "existing:p06",
+    "existing:p07",
+    "existing:p08",
+    "existing:p09",
+    "existing:p10",
+    "existing:p11",
+    "existing:p12",
+    "speech-bench:long-cause",
+    "speech-bench:long-plan",
+    "speech-bench:long-trip",
+    "speech-bench:mixed-github",
+    "speech-bench:mixed-slack",
+    "speech-bench:mixed-typescript",
+    "speech-bench:number-date",
+    "speech-bench:number-money",
+    "speech-bench:number-pin",
+    "speech-bench:reply-meeting",
+    "speech-bench:reply-reminder",
+    "speech-bench:reply-sorry",
+    "speech-bench:reply-weather"
+  ],
+  "pitch_items": [
+    "existing:p01",
+    "existing:p02",
+    "existing:p03",
+    "existing:p04",
+    "existing:p05",
+    "existing:p06",
+    "existing:p07",
+    "existing:p08",
+    "existing:p09",
+    "existing:p10",
+    "existing:p11",
+    "existing:p12",
+    "speech-bench:aizuchi-aa",
+    "speech-bench:aizuchi-hai",
+    "speech-bench:aizuchi-naruhodo",
+    "speech-bench:aizuchi-unun",
+    "speech-bench:long-cause",
+    "speech-bench:long-plan",
+    "speech-bench:long-trip",
+    "speech-bench:mixed-github",
+    "speech-bench:mixed-slack",
+    "speech-bench:mixed-typescript",
+    "speech-bench:number-date",
+    "speech-bench:number-money",
+    "speech-bench:number-pin",
+    "speech-bench:question-confirm",
+    "speech-bench:question-which",
+    "speech-bench:reply-done",
+    "speech-bench:reply-meeting",
+    "speech-bench:reply-reminder",
+    "speech-bench:reply-sorry",
+    "speech-bench:reply-weather"
+  ]
+}

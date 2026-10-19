@@ -1,0 +1,17 @@
+{
+  "at": "2026-10-19T02:50:40Z",
+  "passed": [
+    "reference/held-out/target IDs disjoint",
+    "actual C++ 48kHz resampler bypass bit-identical",
+    "changed request conditions rejected on resume",
+    "changed artifact bytes rejected on resume",
+    "failed requests reused unless retry explicitly enabled",
+    "tmux detached startup",
+    "graceful SIGTERM persisted stopped state",
+    "no child workers remained after stop",
+    "resume reused 120 completed reference encodings and all waveform results",
+    "all 180 reference encodings completed",
+    "all 30 automatic-length oracles completed",
+    "first controlled official generations validated for sample count and common noise"
+  ]
+}

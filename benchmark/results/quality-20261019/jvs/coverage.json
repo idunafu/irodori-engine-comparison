@@ -1,0 +1,18 @@
+{
+  "generation": {
+    "ok": 60000
+  },
+  "failure_categories": {},
+  "scores": [
+    {
+      "scorer": "campplus",
+      "status": "ok",
+      "count": 60000
+    },
+    {
+      "scorer": "whisper",
+      "status": "ok",
+      "count": 60000
+    }
+  ]
+}

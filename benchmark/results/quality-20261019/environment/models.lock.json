@@ -1,0 +1,71 @@
+{
+  "kana": {
+    "repo": "sbintuitions/kana-whisper",
+    "revision": "88ecb3d79c5846cb4fcf76f4107b84c8fa2acd82",
+    "files": {
+      "added_tokens.json": "3c51f66c4c21f9e126970078f11ae77a78c74aee8df606ee9daba86e467108e0",
+      "merges.txt": "2df2990a395e35e8dfbc7511e08c12d56018d8d04691e0133e5d63b21e154dc6",
+      "preprocessor_config.json": "654cf18d3e163b948ceaf9766da56ce0b52de265d58673cf61c9376f126bd499",
+      "normalizer.json": "bf1c507dc8724ca9cf9903640dacfb69dae2f00edee4f21ceba106a7392f26dd",
+      "tokenizer.json": "615928f5a25409279b47b47d87a4ca2aaee3bd09f65e1a3df6c9d23c718cfdb0",
+      "vocab.json": "6788c80b082e9b0d1393147d3a3e62ba19285ac0c82ace8e5ef00f37ead58971",
+      "config.json": "849430a620146c3340a7e2fb58df71edae38541cc4cf205ddad8fa7dcf61c168",
+      "model.safetensors": "1f1c5037afee72e7d6d632a8de5fa623b6c749b2a5c8bdd8ca8edb6ee3c76857",
+      "special_tokens_map.json": "baea4ea09372eb4fca86b4e4346139fd73cb807d5087e9de0948e971739c3e74",
+      "tokenizer_config.json": "3c75940dfce3a294fca7041a5faff011677f1b68fa85e47511bb8cf6dccaded6",
+      "generation_config.json": "43c37afdfc8467cc9b9d9578a0763108af92f5d3455c9d5406236b741077b3f9"
+    }
+  },
+  "whisper": {
+    "repo": "openai/whisper-large-v3-turbo",
+    "revision": "41f01f3fe87f28c78e2fbf8b568835947dd65ed9",
+    "files": {
+      "added_tokens.json": "3c51f66c4c21f9e126970078f11ae77a78c74aee8df606ee9daba86e467108e0",
+      "merges.txt": "2df2990a395e35e8dfbc7511e08c12d56018d8d04691e0133e5d63b21e154dc6",
+      "preprocessor_config.json": "7ccc62c6f2765af1f3b46c00c9b5894426835a05021c8b9c01eecb6dfb542711",
+      "normalizer.json": "bf1c507dc8724ca9cf9903640dacfb69dae2f00edee4f21ceba106a7392f26dd",
+      "tokenizer.json": "297b13372ac43916285644fb9687add3cc62ee2a1adb60da3dc25cc94c1871fd",
+      "vocab.json": "e2aa043ef015641d363d8288e7c241c85e36a5c761fb303598e0710233344387",
+      "config.json": "c5b526b3e3cd64cd8940dabb45e8ba726629e22d8ed389c29b552f9140daf04a",
+      "model.safetensors": "542566a422ae4f3fd23f1ba11add198fca01bbf82e66e6a2857b3f608b1eb9d1",
+      "special_tokens_map.json": "baea4ea09372eb4fca86b4e4346139fd73cb807d5087e9de0948e971739c3e74",
+      "tokenizer_config.json": "844b642c73a91359722f47b35705f7174686df33d252695d8572cf9ac03a6389",
+      "generation_config.json": "cce11bfe3aaa6ae9e072ea2637caaec8795e68d9b67e655a5af16ee509681a4c"
+    }
+  },
+  "qwen": {
+    "repo": "sakasegawa/Qwen3-ASR-1.7B-GGUF",
+    "revision": "75edaf1dd34c60409d3190dbcb36dbec70cad5ea",
+    "file": "Qwen3-ASR-1.7B-Q8_0.gguf",
+    "sha256": "5f219b78a1d9c3b9e97da27708b36f8a0bc1bfc1650b541c0a6dbaf87c9a62d0",
+    "files": {
+      "Qwen3-ASR-1.7B-Q8_0.gguf": "5f219b78a1d9c3b9e97da27708b36f8a0bc1bfc1650b541c0a6dbaf87c9a62d0"
+    }
+  },
+  "reazon": {
+    "repo": "sakasegawa/reazonspeech-nemo-v2-GGUF",
+    "revision": "cb9e436cf3f9d9563c610cb5318adcfc5c0fe098",
+    "file": "reazonspeech-nemo-619M-v2-F16.gguf",
+    "sha256": "1492147d7d18fbb0503db2cbbb05df4932cb3451e391524c6a2411632e4823bf",
+    "files": {
+      "reazonspeech-nemo-619M-v2-F16.gguf": "1492147d7d18fbb0503db2cbbb05df4932cb3451e391524c6a2411632e4823bf"
+    }
+  },
+  "campplus": {
+    "repo": "csukuangfj/speaker-embedding-models",
+    "revision": "0743f301363dec56491a490f6d6cbc9d67f9a3bf",
+    "file": "3dspeaker_speech_campplus_sv_zh-cn_16k-common.onnx",
+    "files": {
+      "3dspeaker_speech_campplus_sv_zh-cn_16k-common.onnx": "f682b514c05d947ee3fa91cd6ec6c5c7543479a128373fa29b1faedccd21fd11"
+    }
+  },
+  "eres2net": {
+    "repo": "csukuangfj/speaker-embedding-models",
+    "revision": "0743f301363dec56491a490f6d6cbc9d67f9a3bf",
+    "file": "3dspeaker_speech_eres2netv2_sv_zh-cn_16k-common.onnx",
+    "sha256": "bf1a75b9930474cf3389ef415e6e5d38ca96fea4a3a00f7e301d080a58ee2239",
+    "files": {
+      "3dspeaker_speech_eres2netv2_sv_zh-cn_16k-common.onnx": "bf1a75b9930474cf3389ef415e6e5d38ca96fea4a3a00f7e301d080a58ee2239"
+    }
+  }
+}

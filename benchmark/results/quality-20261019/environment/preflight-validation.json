@@ -1,0 +1,317 @@
+[
+  {
+    "name": "official-mf-fp32:no-ref-auto",
+    "ok": true,
+    "frames": 83,
+    "samples": 159360
+  },
+  {
+    "name": "official-mf-fp32:no-ref-fixed",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "official-mf-fp32:reference-fixed",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "official-mf-fp32:reference-repeat",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "official-rf-fp32:no-ref-auto",
+    "ok": true,
+    "frames": 83,
+    "samples": 159360
+  },
+  {
+    "name": "official-rf-fp32:no-ref-fixed",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "official-rf-fp32:reference-fixed",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "official-rf-fp32:reference-repeat",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "onnx-mf-fp32:no-ref-auto",
+    "ok": true,
+    "frames": 83,
+    "samples": 159360
+  },
+  {
+    "name": "onnx-mf-fp32:no-ref-fixed",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "onnx-no-ref-fp32-waveform",
+    "ok": true,
+    "correlation": 0.9999999985864763
+  },
+  {
+    "name": "onnx-mf-fp32:reference-fixed",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "onnx-mf-fp32:reference-repeat",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "onnx-mf-fp32:reference-auto",
+    "ok": true,
+    "frames": 97,
+    "samples": 186240
+  },
+  {
+    "name": "onnx-mf-fp32:reference-unchanged",
+    "ok": true,
+    "max_abs": 0.0,
+    "bit_identical": true
+  },
+  {
+    "name": "speech-mf-fp32:no-ref-auto",
+    "ok": true,
+    "frames": 83,
+    "samples": 159360
+  },
+  {
+    "name": "speech-mf-fp32:no-ref-fixed",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "speech-mf-fp32:reference-fixed",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "speech-mf-fp32:reference-repeat",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "speech-rf-fp32:no-ref-auto",
+    "ok": true,
+    "frames": 83,
+    "samples": 159360
+  },
+  {
+    "name": "speech-rf-fp32:no-ref-fixed",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "speech-rf-fp32:reference-fixed",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "speech-rf-fp32:reference-repeat",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "official-mf-bf16:no-ref-auto",
+    "ok": true,
+    "frames": 83,
+    "samples": 159360
+  },
+  {
+    "name": "official-mf-bf16:no-ref-fixed",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "official-mf-bf16:reference-fixed",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "official-mf-bf16:reference-repeat",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "official-rf-bf16:no-ref-auto",
+    "ok": true,
+    "frames": 83,
+    "samples": 159360
+  },
+  {
+    "name": "official-rf-bf16:no-ref-fixed",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "official-rf-bf16:reference-fixed",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "official-rf-bf16:reference-repeat",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "onnx-mf-fp16:no-ref-auto",
+    "ok": true,
+    "frames": 83,
+    "samples": 159360
+  },
+  {
+    "name": "onnx-mf-fp16:no-ref-fixed",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "onnx-mf-fp16:reference-fixed",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "onnx-mf-fp16:reference-repeat",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "onnx-mf-fp16:reference-auto",
+    "ok": true,
+    "frames": 97,
+    "samples": 186240
+  },
+  {
+    "name": "onnx-mf-fp16:reference-unchanged",
+    "ok": true,
+    "max_abs": 0.0,
+    "bit_identical": true
+  },
+  {
+    "name": "speech-mf-f16:no-ref-auto",
+    "ok": true,
+    "frames": 83,
+    "samples": 159360
+  },
+  {
+    "name": "speech-mf-f16:no-ref-fixed",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "speech-mf-f16:reference-fixed",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "speech-mf-f16:reference-repeat",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "speech-rf-f16:no-ref-auto",
+    "ok": true,
+    "frames": 83,
+    "samples": 159360
+  },
+  {
+    "name": "speech-rf-f16:no-ref-fixed",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "speech-rf-f16:reference-fixed",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "speech-rf-f16:reference-repeat",
+    "ok": true,
+    "frames": 25,
+    "samples": 48000
+  },
+  {
+    "name": "onnx-no-reference-duration",
+    "ok": true,
+    "official_frames": 83,
+    "onnx_frames": 83
+  },
+  {
+    "name": "scorer:kana",
+    "ok": true,
+    "transcript": "キョーワヨクハレテイ",
+    "dimensions": 0
+  },
+  {
+    "name": "scorer:whisper",
+    "ok": true,
+    "transcript": "今日はよく晴れています",
+    "dimensions": 0
+  },
+  {
+    "name": "scorer:campplus",
+    "ok": true,
+    "transcript": null,
+    "dimensions": 192
+  },
+  {
+    "name": "scorer:eres2net",
+    "ok": true,
+    "transcript": null,
+    "dimensions": 192
+  },
+  {
+    "name": "scorer:qwen",
+    "ok": true,
+    "transcript": "今日はよく晴れていい。",
+    "dimensions": 0
+  },
+  {
+    "name": "scorer:reazon",
+    "ok": true,
+    "transcript": "晴れている?",
+    "dimensions": 0
+  },
+  {
+    "name": "complete",
+    "ok": true
+  }
+]

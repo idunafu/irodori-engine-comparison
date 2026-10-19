@@ -1,0 +1,11 @@
+{
+  "generations": 900,
+  "scores": 900,
+  "expected": 900,
+  "encodings": 60,
+  "expected_encodings": 60,
+  "failed": 0,
+  "length_or_noise_mismatches": [],
+  "identical_centroid": true,
+  "codec_latent_max_relative_l2": 0.0
+}

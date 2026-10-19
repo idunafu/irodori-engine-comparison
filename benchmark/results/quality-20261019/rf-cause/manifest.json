@@ -1,0 +1,175 @@
+{
+  "source_run": "artifacts/quality/runs/20261016-reading",
+  "cases": [
+    "official-rf-bf16",
+    "speech-rf-f16",
+    "official-rf-fp32",
+    "speech-rf-fp32"
+  ],
+  "native32": [
+    "existing:p01",
+    "existing:p02",
+    "existing:p03",
+    "existing:p04",
+    "existing:p05",
+    "existing:p06",
+    "existing:p07",
+    "existing:p08",
+    "existing:p09",
+    "existing:p10",
+    "existing:p11",
+    "existing:p12",
+    "speech-bench:aizuchi-aa",
+    "speech-bench:aizuchi-hai",
+    "speech-bench:aizuchi-naruhodo",
+    "speech-bench:aizuchi-unun",
+    "speech-bench:long-cause",
+    "speech-bench:long-plan",
+    "speech-bench:long-trip",
+    "speech-bench:mixed-github",
+    "speech-bench:mixed-slack",
+    "speech-bench:mixed-typescript",
+    "speech-bench:number-date",
+    "speech-bench:number-money",
+    "speech-bench:number-pin",
+    "speech-bench:question-confirm",
+    "speech-bench:question-which",
+    "speech-bench:reply-done",
+    "speech-bench:reply-meeting",
+    "speech-bench:reply-reminder",
+    "speech-bench:reply-sorry",
+    "speech-bench:reply-weather"
+  ],
+  "matched31": [
+    "existing:p01",
+    "existing:p02",
+    "existing:p03",
+    "existing:p04",
+    "existing:p05",
+    "existing:p06",
+    "existing:p07",
+    "existing:p08",
+    "existing:p09",
+    "existing:p10",
+    "existing:p11",
+    "existing:p12",
+    "speech-bench:aizuchi-aa",
+    "speech-bench:aizuchi-hai",
+    "speech-bench:aizuchi-naruhodo",
+    "speech-bench:aizuchi-unun",
+    "speech-bench:long-cause",
+    "speech-bench:long-plan",
+    "speech-bench:long-trip",
+    "speech-bench:mixed-github",
+    "speech-bench:mixed-slack",
+    "speech-bench:mixed-typescript",
+    "speech-bench:number-date",
+    "speech-bench:number-pin",
+    "speech-bench:question-confirm",
+    "speech-bench:question-which",
+    "speech-bench:reply-done",
+    "speech-bench:reply-meeting",
+    "speech-bench:reply-reminder",
+    "speech-bench:reply-sorry",
+    "speech-bench:reply-weather"
+  ],
+  "equal_length_fp32_27": [
+    "existing:p01",
+    "existing:p02",
+    "existing:p03",
+    "existing:p04",
+    "existing:p05",
+    "existing:p07",
+    "existing:p08",
+    "existing:p09",
+    "existing:p10",
+    "existing:p11",
+    "existing:p12",
+    "speech-bench:aizuchi-aa",
+    "speech-bench:aizuchi-hai",
+    "speech-bench:aizuchi-naruhodo",
+    "speech-bench:aizuchi-unun",
+    "speech-bench:long-trip",
+    "speech-bench:mixed-github",
+    "speech-bench:mixed-slack",
+    "speech-bench:mixed-typescript",
+    "speech-bench:number-date",
+    "speech-bench:number-pin",
+    "speech-bench:question-confirm",
+    "speech-bench:question-which",
+    "speech-bench:reply-done",
+    "speech-bench:reply-reminder",
+    "speech-bench:reply-sorry",
+    "speech-bench:reply-weather"
+  ],
+  "exclusion_from_32": {
+    "item": "speech-bench:number-money",
+    "reason": "common-mode length assertion; 116/25*48000 is 222719.99999999997, truncation 222719 versus expected 222720"
+  },
+  "bootstrap": {
+    "unit": "text",
+    "replicates": 2000,
+    "seed": 20261016
+  },
+  "existing_noise_and_frame_hash_audits": 155,
+  "synthesis_performed": false,
+  "additional_asr": {
+    "model": "pinned whisper-large-v3-turbo",
+    "requests": 8,
+    "selection": "posthoc diagnostic examples; not added to corpus-wide scores"
+  },
+  "sources": [
+    {
+      "path": "artifacts/quality/runs/20261016-reading/results.sqlite3",
+      "sha256": "5dcbed958a69457befd656e0831183f1f2f22bce887b7ae99cd847cecf1dd5b2"
+    },
+    {
+      "path": "artifacts/quality/runs/20261016-reading/report/per-input.jsonl",
+      "sha256": "73dc812b9f4aaa809b5e79282efc127d9f074509ed2148ee9b8b46874bbc4314"
+    },
+    {
+      "path": "artifacts/quality/runs/20261016-reading/manifest.json",
+      "sha256": "fdef4591a853ea815667245fbbb22627b038a695bf75430677ca34204dbe11cb"
+    },
+    {
+      "path": "artifacts/quality/runs/20261016-reading/analysis/rf-cause/recompute.py",
+      "sha256": "ac3e816a8d0e070b2224bacb6b13eb1be267b2cc925dff68988b8c4a12dbacb7"
+    },
+    {
+      "path": "benchmark/quality/python_worker.py",
+      "sha256": "1e89dda28f3481754dab847cd3d177f80951e4922ea10ed95edc08ae3da4c013"
+    },
+    {
+      "path": "benchmark/quality/speech_worker.cpp",
+      "sha256": "164b34cc14507303f37e5603adc5f3995b80d847375bb351243b00e89f45125d"
+    },
+    {
+      "path": "benchmark/quality/config.json",
+      "sha256": "29010ba2d1f72f3ae7e369502eec45890d42d5565386a841d661c8045357b6fc"
+    },
+    {
+      "path": "benchmark/quality/score_worker.py",
+      "sha256": "424c90092378830bcd035f1b3f05de60df3c7244f6c5504709cb15e3f7838d0c"
+    },
+    {
+      "path": "engines/speech.cpp/src/families/irodori-tts/sampler.cpp",
+      "sha256": "032936be64ba4b1717f44a2235c838bf69f19694c411b31f4f8099125f99af98"
+    },
+    {
+      "path": "engines/Irodori-TTS/irodori_tts/rf.py",
+      "sha256": "1e6eaf25a04ee99338be64801ef4a749f553a3cc02cc4544f338585bac405c03"
+    },
+    {
+      "path": "artifacts/quality/runs/20261016-reading/analysis/rf-cause/whisper-check.jsonl",
+      "sha256": "2c4b04b939c9d8c2cb356f4fd4afbd712518c3ad43f3ee3a87c7349e671f2e96"
+    },
+    {
+      "path": "artifacts/quality/runs/20261016-reading/analysis/rf-cause/verify_asr.py",
+      "sha256": "ca28313abca7d32cebaa0787dd7806ea3a00cd7ac349553f70830cadd39066cf"
+    },
+    {
+      "path": "artifacts/quality/runs/20261016-reading/analysis/rf-cause/whisper-status.json",
+      "sha256": "4e40304c372577b8df1d4a35a416a63153734d31e94d8355ec387c0fb71b3982"
+    }
+  ]
+}

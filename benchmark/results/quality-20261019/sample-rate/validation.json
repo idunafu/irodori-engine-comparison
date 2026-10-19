@@ -1,0 +1,18 @@
+{
+  "waveforms": 594,
+  "expected_waveforms": 594,
+  "encodings": 180,
+  "expected_encodings": 180,
+  "generations": 3600,
+  "expected_generations": 3600,
+  "scores": 3600,
+  "failed": 0,
+  "paired_groups": 150,
+  "expected_groups": 150,
+  "noise_or_length_mismatch": [],
+  "expected_conditions_per_group": 24,
+  "incomplete_groups": [],
+  "source_subtypes": [
+    "FLOAT"
+  ]
+}

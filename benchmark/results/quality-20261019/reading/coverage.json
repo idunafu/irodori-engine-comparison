@@ -1,0 +1,42 @@
+{
+  "generation": {
+    "failed": 200,
+    "ok": 354700
+  },
+  "failure_categories": {
+    "duration_limit": 160,
+    "other": 40
+  },
+  "scores": [
+    {
+      "scorer": "eres2net",
+      "status": "ok",
+      "count": 4000
+    },
+    {
+      "scorer": "kana",
+      "status": "ok",
+      "count": 350900
+    },
+    {
+      "scorer": "qwen",
+      "status": "failed",
+      "count": 3
+    },
+    {
+      "scorer": "qwen",
+      "status": "ok",
+      "count": 3997
+    },
+    {
+      "scorer": "reazon",
+      "status": "ok",
+      "count": 4000
+    },
+    {
+      "scorer": "whisper",
+      "status": "ok",
+      "count": 350900
+    }
+  ]
+}

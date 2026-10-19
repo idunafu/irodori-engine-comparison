@@ -1,0 +1,36 @@
+{
+  "as_of": "2026-10-19",
+  "published_copies": 77,
+  "checks": [
+    "77 published files match original artifacts after documented path normalization or JSONL-to-JSON conversion; source and published SHA-256 values verified",
+    "JKYB, practical and JVS overview tables agree with source CSVs",
+    "All reading/JVS summary means, population standard deviations and five-seed coverage recomputed from per-seed CSVs",
+    "414900 requests, 200 generation failures and 3 scorer failures agree with both original SQLite databases",
+    "Sample-rate/F16 completion counts and F16 difference range agree with saved results",
+    "Published JSON/Python syntax and local Markdown links valid",
+    "Corpora, raw artifacts and caches ignored; source/config/results eligible for tracking; no tracked files match ignore rules",
+    "Git-eligible text files contain no machine-specific filesystem roots, account name, drive paths or local file URLs",
+    "All normalized published files match originals with only the documented path/format transformation; numeric metrics and artifact hashes unchanged"
+  ],
+  "tests": {
+    "command": ".venvs/quality/bin/python -m pytest -q benchmark/quality/test_quality.py",
+    "passed": 12
+  },
+  "evaluation": {
+    "requests": 414900,
+    "generation_successes": 414700,
+    "generation_failures": 200,
+    "scorer_failures": 3,
+    "reading_run_status": "failed",
+    "jvs_run_status": "complete"
+  },
+  "original_artifacts_modified": false,
+  "path_normalization": {
+    "scope": "Git-tracked and non-ignored untracked files in the main repository; submodule contents and ignored local artifacts excluded",
+    "path_base": "repository root",
+    "result_files_normalized": 12,
+    "path_occurrences_normalized": 4805,
+    "original_artifacts_modified": false,
+    "git_eligible_text_files_scanned": 208
+  }
+}

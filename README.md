@@ -6,6 +6,8 @@ Irodori-TTSの7実装について、同じモデル・入力テキスト・参�
 - [speech.cppのコミット間A/B比較](benchmark/results/speech-ab-6bd7b027/RESULTS.ja.md)
 - [PyTorch／ONNX Runtime更新のA/B比較](benchmark/results/runtime-ab-20261015/RESULTS.ja.md)
 - [公式MFの速度低下：段階別計測と原因切り分け](benchmark/results/mf-runtime-cause-20261015/RESULTS.ja.md)
+- [自動品質評価の結果：読み・話者再現性・サンプルレート・F16診断](benchmark/results/quality-20261019/RESULTS.ja.md)
+- [品質評価の条件・準備・tmuxでの実行手順](benchmark/quality/README.ja.md)
 - [構築・実行手順](docs/usage.ja.md)／[測定方法・指標の定義](docs/methodology.ja.md)
 
 ## 対象実装と固定コミット

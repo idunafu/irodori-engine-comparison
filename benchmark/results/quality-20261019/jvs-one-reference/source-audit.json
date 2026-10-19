@@ -1,0 +1,106 @@
+[
+  {
+    "path": "artifacts/quality/runs/20261018-jvs/analysis/one-reference/analyze.py",
+    "sha256": "774a79a80d435d666687760c8872eb94713c52169f6b7863aa73f0e04299f6a6"
+  },
+  {
+    "path": "artifacts/quality/runs/20261018-jvs/analysis/one-reference/codec-audit",
+    "sha256": "bd4d538aaa4fe20504babc9faf9fb9bffc3b59bb85465c045e3f4f1ea7f90cc3"
+  },
+  {
+    "path": "artifacts/quality/runs/20261018-jvs/analysis/one-reference/codec-audit.cpp",
+    "sha256": "855e20f29dbec6795c12b61476df507c6ebd0fcadcbfba16b1ddfaa9bf700f44"
+  },
+  {
+    "path": "artifacts/quality/runs/20261018-jvs/analysis/one-reference/cpu-codec-audit.json",
+    "sha256": "e708d2d3064f2c3a79244bb451424bbaf06536e92e1f9d4bbfc5c0b478b59639"
+  },
+  {
+    "path": "artifacts/quality/runs/20261018-jvs/analysis/one-reference/cpu_audit.py",
+    "sha256": "1620f290fccb4550a0ece8061a41d2064cba84354ea407d20fe2ed9a32630ada"
+  },
+  {
+    "path": "artifacts/quality/runs/20261018-jvs/analysis/one-reference/dump-results.json",
+    "sha256": "82e211059fecf20855ef32be7493365b076aec212beba77fe84571e31ff4a3f8"
+  },
+  {
+    "path": "artifacts/quality/runs/20261018-jvs/analysis/one-reference/generation.jsonl",
+    "sha256": "9cb31c0caea44fb324e79a12292c58115cae2a0883700b82d152af94083eb2ee"
+  },
+  {
+    "path": "artifacts/quality/runs/20261018-jvs/analysis/one-reference/gpu-codec-audit.json",
+    "sha256": "8c4f94a7c97f2bf530f72a4b6b0afd201c631e7037dfb526853096f1922b6b2b"
+  },
+  {
+    "path": "artifacts/quality/runs/20261018-jvs/analysis/one-reference/gpu-codec-status.json",
+    "sha256": "7b944532e50671f22457f1eaf8c9aaf664a118209d3f1c0a0396d2c427a27f17"
+  },
+  {
+    "path": "artifacts/quality/runs/20261018-jvs/analysis/one-reference/gpu_codec_audit.py",
+    "sha256": "a32102bafa97408a47739b53c3f1757f024b539215b2280d53652ee28836d5bc"
+  },
+  {
+    "path": "artifacts/quality/runs/20261018-jvs/analysis/one-reference/manifest.json",
+    "sha256": "786730988ef9711a7c76bf6214fbdb504d4295ced84938a5797e14d6e855b521"
+  },
+  {
+    "path": "artifacts/quality/runs/20261018-jvs/analysis/one-reference/official.py",
+    "sha256": "96b47fcf8e3895b79b4c186ebc422c792e887b5800ba8099c1beb05bce8e6ef2"
+  },
+  {
+    "path": "artifacts/quality/runs/20261018-jvs/analysis/one-reference/run.py",
+    "sha256": "54c652f5d541932159edc38b7a602fdc7c0dc7b4b3b54e1e7e91537c3ec8532b"
+  },
+  {
+    "path": "artifacts/quality/runs/20261018-jvs/analysis/one-reference/scores.jsonl",
+    "sha256": "bf332aa5e1d7477f80fda720ae62568be4924e870de1e27e092b36e4d4acbe11"
+  },
+  {
+    "path": "artifacts/quality/runs/20261018-jvs/analysis/one-reference/speech-diagnostic",
+    "sha256": "9fb1bcdbb3563c8fac9c5d9ae416bbc3ca470e536f7a46d932322c81f38241a2"
+  },
+  {
+    "path": "artifacts/quality/runs/20261018-jvs/analysis/one-reference/validation.json",
+    "sha256": "a0c358108f2db9c0bf9184ae60aae47641a0c4aa691b124b24b5ebdbd10184d1"
+  },
+  {
+    "path": "artifacts/quality/runs/20261018-jvs/analysis/one-reference/worker.cpp",
+    "sha256": "b8a95b5fd159cfb0cac78293e12b5e6d164fe062a82732b345a320dfdc046754"
+  },
+  {
+    "path": "artifacts/quality/runs/20261018-jvs/speaker-centroids.json",
+    "sha256": "97e13734b7adeb016edeb8ca222fa182158168884263d7f2e1ed2a139e96db64"
+  },
+  {
+    "path": "engines/Irodori-TTS/irodori_tts/codec.py",
+    "sha256": "12a9bf9faf04f8983579ba4cb49a2ab5af21a81b8262f1537eeba9b805f402c4"
+  },
+  {
+    "path": "engines/Irodori-TTS/irodori_tts/model.py",
+    "sha256": "21f5d3591a8a514db4fd90ee16e6e371a38f94b3038b4d355b19597a23c4e8ed"
+  },
+  {
+    "path": "engines/speech.cpp/ggml/src/ggml-vulkan/vulkan-shaders/vulkan-shaders-gen.cpp",
+    "sha256": "352c98f5003654fcd6d06baff6e167956d76aaa61a8aa0947b2ca6f0e8c2b413"
+  },
+  {
+    "path": "engines/speech.cpp/src/common/graph.h",
+    "sha256": "92e795667fada39407b5b3f7b1303c9e847fed99618781bb8242a9ba006ffe22"
+  },
+  {
+    "path": "engines/speech.cpp/src/common/resample.cpp",
+    "sha256": "922baa76c9cae94b1ef7139c70fdbc496d8ea28f1ccc20bbfb009b05ffa2cd78"
+  },
+  {
+    "path": "engines/speech.cpp/src/families/irodori-tts/codec.cpp",
+    "sha256": "48539ab3ecc5dc7728fd4cf0bf67c3441385f3e102dd5717c057d0f170c4c21d"
+  },
+  {
+    "path": "engines/speech.cpp/src/families/irodori-tts/reference.cpp",
+    "sha256": "a03861e95c16a314a4b658bbea12b315a7a6e8f3cef1b5a75e232fd4a3fcca0f"
+  },
+  {
+    "path": "engines/speech.cpp/src/families/irodori-tts/speaker-encoder.cpp",
+    "sha256": "9607c5451d020a1e733e65233e006062d7406efba098c2bc5131e42353a46478"
+  }
+]

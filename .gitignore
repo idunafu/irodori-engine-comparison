@@ -218,6 +218,10 @@ tempCodeRunnerFile.py
 /cache/
 /TYC054.wav
 
+# Downloaded quality-evaluation corpora; keep reports and source code in Git.
+/jvs_ver1.zip
+/wav_tsukuyomi.zip
+
 # Local scratch files and editor backups
 /tmp/
 /temp/

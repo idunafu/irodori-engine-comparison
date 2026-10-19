@@ -1,0 +1,98 @@
+{
+  "schema": 1,
+  "archive_sha256": "29a3ca05fd26672c0b7faad8fdfa2c8f9f7709b18b2d8eaef6af2a08ea6d729a",
+  "rates": [
+    96000,
+    48000,
+    44100,
+    32000,
+    24000,
+    16000
+  ],
+  "references": [
+    "VOICEACTRESS100_001",
+    "VOICEACTRESS100_002",
+    "VOICEACTRESS100_003",
+    "VOICEACTRESS100_004",
+    "VOICEACTRESS100_005"
+  ],
+  "heldout": [
+    "VOICEACTRESS100_011",
+    "VOICEACTRESS100_012",
+    "VOICEACTRESS100_013",
+    "VOICEACTRESS100_014",
+    "VOICEACTRESS100_015",
+    "VOICEACTRESS100_016",
+    "VOICEACTRESS100_017",
+    "VOICEACTRESS100_018",
+    "VOICEACTRESS100_019",
+    "VOICEACTRESS100_020"
+  ],
+  "target_ids": [
+    "VOICEACTRESS100_021",
+    "VOICEACTRESS100_022",
+    "VOICEACTRESS100_023"
+  ],
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "variants": [
+    "mf",
+    "rf"
+  ],
+  "modes": [
+    "official",
+    "speech",
+    "speech_no_f16",
+    "official_speech_pcm"
+  ],
+  "precision": "fp32 weights; default Vulkan may use F16 operands",
+  "strict_flags": {
+    "GGML_VK_DISABLE_COOPMAT": "1",
+    "GGML_VK_DISABLE_COOPMAT2": "1",
+    "GGML_VK_DISABLE_F16": "1"
+  },
+  "input_conversion": "libsoxr VHQ, directly from original 96kHz, float32 WAV at every rate",
+  "controlled_length": "official 48kHz reference prediction per variant/reference/text, shared across rates and modes",
+  "controlled_noise": "same raw float32 array per variant/reference/text/seed across rates and modes",
+  "scoring": "CAM++ cosine to held-out VOICEACTRESS100_011..020 centroid; one speaker, no Top-1",
+  "waveform_count": 594,
+  "generation_count": 3600,
+  "excluded_sources": {
+    "VOICEACTRESS100_050": "source header is 48000 Hz rather than 96000 Hz"
+  },
+  "packages": {
+    "numpy": "2.2.6",
+    "soundfile": "0.13.1",
+    "soxr": "1.0.0",
+    "torch": "2.10.0+cu128",
+    "torchaudio": "2.10.0+cu128",
+    "sherpa-onnx": "1.13.8"
+  },
+  "sources": {
+    "artifacts/benchmark/models/speech-mf/Irodori-TTS-866M-MF-v4.1-F32.gguf": "c98801aca55a977b6c08c23bbd8794352db03ffe51b05cc63d0aaeee55cd00ce",
+    "artifacts/benchmark/models/speech-rf/Irodori-TTS-859M-v4.1-F32.gguf": "9ac382efe6d6bb4e590ef14d760cb5760f59ac07952dd13c1b99ef89bb3d1caa",
+    "artifacts/quality/assets/jvs/jvs_ver1/jvs001/parallel100/transcripts_utf8.txt": "26019d87876fc73786d98c459f08f24c1e04eae41105f88afc57f2a910befd90",
+    "artifacts/quality/runs/20261018-jvs/analysis/one-reference/official.py": "96b47fcf8e3895b79b4c186ebc422c792e887b5800ba8099c1beb05bce8e6ef2",
+    "artifacts/quality/runs/20261018-jvs/analysis/one-reference/speech-diagnostic": "9fb1bcdbb3563c8fac9c5d9ae416bbc3ca470e536f7a46d932322c81f38241a2",
+    "artifacts/quality/runs/20261018-jvs/manifest.json": "2106c61efceb0ddaf698ebc533187d41aefba6bd0cb2432a0cdb0fdf288aed29",
+    "artifacts/quality/runs/20261019-tsukuyomi-samplerate/wave-worker": "9add63115ce19d299e959f6f029df2e61aa4f989f0624be970de0c56f82d70d3",
+    "benchmark/quality/common.py": "a13d42430243829976b8dea3e0a83245179f426f53e4ecd88eccc610b29af727",
+    "benchmark/quality/config.json": "29010ba2d1f72f3ae7e369502eec45890d42d5565386a841d661c8045357b6fc",
+    "benchmark/quality/sample_rate/analyze.py": "132d0a7caedd81c774ac240b90515cb295754fd279319d340cce3f663c030bc8",
+    "benchmark/quality/sample_rate/official_worker.py": "d83e86b281be58f6a216052e28020d55bd7b100ac98ebc09bf2375f52db4d333",
+    "benchmark/quality/sample_rate/run.py": "0f9883d2e24d41671d69a135ada94ce521f70e8a439f17d245373e1004956588",
+    "benchmark/quality/sample_rate/wave_worker.cpp": "dbae34556c215f13c494d773d4f88c82d142cff384f15ef1d6eb67725c899b56",
+    "benchmark/quality/score_worker.py": "424c90092378830bcd035f1b3f05de60df3c7244f6c5504709cb15e3f7838d0c",
+    "benchmark/quality/worker.py": "bb2b5c5392ecc3efa54a93deec46d2c6b713d40cc1b0f0ffc57d8d289eb7f73a",
+    "engines/Irodori-TTS/irodori_tts/codec.py": "12a9bf9faf04f8983579ba4cb49a2ab5af21a81b8262f1537eeba9b805f402c4",
+    "engines/speech.cpp/src/common/resample.cpp": "922baa76c9cae94b1ef7139c70fdbc496d8ea28f1ccc20bbfb009b05ffa2cd78",
+    "models/codec/weights.pth": "db120339c5ee7eca1912cdf29bc612b947a0808e69c3cebfb4936b45a762c1d5",
+    "models/mf/model.safetensors": "a3f204b3ee06058f4e639a1af38408e7e3af5b6c75176897ecb8bfaaebb4fd54",
+    "models/rf/model.safetensors": "c85de88c01700cb53538e706f128ebcb1b8513ad21d7d0e75f58bc82cdbf89f6"
+  }
+}

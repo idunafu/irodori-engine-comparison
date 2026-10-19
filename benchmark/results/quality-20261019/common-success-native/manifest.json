@@ -1,0 +1,55 @@
+{
+  "source_run": "artifacts/quality/runs/20261016-reading",
+  "cases": [
+    "official-mf-bf16",
+    "onnx-mf-fp16",
+    "speech-mf-f16",
+    "official-rf-bf16",
+    "speech-rf-f16"
+  ],
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "selection": "All five native practical-precision cases succeeded for every seed; no selection by ASR quality",
+  "texts": 32,
+  "excluded_texts": 8,
+  "takes_per_case": 160,
+  "bootstrap": {
+    "unit": "text",
+    "replicates": 2000,
+    "seed": 20261016
+  },
+  "inference_performed": false,
+  "checks": [
+    "matched 32 texts across all cases and seeds",
+    "ASR score status all ok",
+    "identical normalized reference lengths",
+    "reproduced original 40-text ASR means"
+  ],
+  "sources": [
+    {
+      "path": "artifacts/quality/runs/20261016-reading/results.sqlite3",
+      "sha256": "5dcbed958a69457befd656e0831183f1f2f22bce887b7ae99cd847cecf1dd5b2"
+    },
+    {
+      "path": "artifacts/quality/runs/20261016-reading/report/per-input.jsonl",
+      "sha256": "73dc812b9f4aaa809b5e79282efc127d9f074509ed2148ee9b8b46874bbc4314"
+    },
+    {
+      "path": "artifacts/quality/runs/20261016-reading/report/summary.csv",
+      "sha256": "12fa55c7667265bf41b04c8ce6f7d30907c71d9de96b8c1a24eada26445e0325"
+    },
+    {
+      "path": "artifacts/quality/runs/20261016-reading/manifest.json",
+      "sha256": "fdef4591a853ea815667245fbbb22627b038a695bf75430677ca34204dbe11cb"
+    },
+    {
+      "path": "artifacts/quality/runs/20261016-reading/analysis/common-success-native/recompute.py",
+      "sha256": "203635e0a1eae611f4b71d266ccefd53aa05d6a01d33a73b912b9a50c3ef3ecd"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "generation_success": 3000,
+  "scoring_success": 3000,
+  "matched_noise_and_length_groups": 600,
+  "held_out_centroids": 100,
+  "reference_tensor_dumps": 160,
+  "cpu_codec_checks": 20,
+  "vulkan_codec_checks": 60,
+  "original_campaign_modified": false
+}

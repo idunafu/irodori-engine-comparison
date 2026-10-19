@@ -1,0 +1,45 @@
+{
+  "speakers": [
+    "jvs090",
+    "jvs099",
+    "jvs061",
+    "jvs034",
+    "jvs030",
+    "jvs006",
+    "jvs026",
+    "jvs086",
+    "jvs015",
+    "jvs089",
+    "jvs096",
+    "jvs046",
+    "jvs040",
+    "jvs050",
+    "jvs064",
+    "jvs077",
+    "jvs056",
+    "jvs052",
+    "jvs084",
+    "jvs011"
+  ],
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "precision": "fp32",
+  "mf_targets_per_speaker": 5,
+  "rf_targets_per_speaker": 1,
+  "modes": [
+    "official",
+    "speech_native",
+    "speech_official_pcm",
+    "speech_official_latent",
+    "speech_official_state"
+  ],
+  "source_manifest_sha256": "2106c61efceb0ddaf698ebc533187d41aefba6bd0cb2432a0cdb0fdf288aed29",
+  "binary_sha256": "9fb1bcdbb3563c8fac9c5d9ae416bbc3ca470e536f7a46d932322c81f38241a2",
+  "original_outputs_modified": false,
+  "selection": "Existing fixed 20-speaker diagnostic; RF uses first fixed text only"
+}
