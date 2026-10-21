@@ -1,0 +1,28 @@
+{
+  "expected_new_generations": 5000,
+  "new_generations": {
+    "ok": 5000
+  },
+  "expected_reused_official": 5000,
+  "expected_reused_previous": 5000,
+  "source_commit": "eacabcd891fefc2c3de3ca2479ff84e60f2679aa",
+  "ggml_commit": "a655cf6910770404213bc338e622cd82b08ca277",
+  "coverage": {
+    "generation": {
+      "ok": 15000
+    },
+    "failure_categories": {},
+    "scores": [
+      {
+        "scorer": "campplus",
+        "status": "ok",
+        "count": 15000
+      },
+      {
+        "scorer": "whisper",
+        "status": "ok",
+        "count": 15000
+      }
+    ]
+  }
+}

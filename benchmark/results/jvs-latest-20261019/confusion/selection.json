@@ -1,0 +1,25 @@
+{
+  "affected": [
+    "jvs042",
+    "jvs049",
+    "jvs071",
+    "jvs036",
+    "jvs061",
+    "jvs098"
+  ],
+  "controls": [
+    "jvs001",
+    "jvs002"
+  ],
+  "speakers": [
+    "jvs042",
+    "jvs049",
+    "jvs071",
+    "jvs036",
+    "jvs061",
+    "jvs098",
+    "jvs001",
+    "jvs002"
+  ],
+  "criterion": "Top six speakers by summed MF/RF excess errors over official, plus first perfect male/female controls; fixed before intervention outputs"
+}

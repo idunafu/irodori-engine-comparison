@@ -1,0 +1,66 @@
+[
+  {
+    "speaker": "jvs042",
+    "source": "artifacts/quality/assets/jvs/jvs_ver1/jvs042/nonpara30/wav24kHz16bit/BASIC5000_0112.wav",
+    "source_sha256": "e7b350b240af85c94e97307fc350dcfef6c96bcff4639d20fe2b3a893d3ec0e6",
+    "wav": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/hann-references/jvs042.wav",
+    "wav_sha256": "1ada017fd4eef22756170bbe39a643dd11ce0e0470f53ef04895d2216abbe813",
+    "samples": 166116
+  },
+  {
+    "speaker": "jvs049",
+    "source": "artifacts/quality/assets/jvs/jvs_ver1/jvs049/nonpara30/wav24kHz16bit/BASIC5000_0036.wav",
+    "source_sha256": "684e929e20e549492f45a4d6e07d86267e2cf283eb1ffc291eacaa9037aff06d",
+    "wav": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/hann-references/jvs049.wav",
+    "wav_sha256": "93ccf04b0eade3ec41149e48a795c20aae7e087c3e4461ba0ee2f34bf4ec25f6",
+    "samples": 295076
+  },
+  {
+    "speaker": "jvs071",
+    "source": "artifacts/quality/assets/jvs/jvs_ver1/jvs071/nonpara30/wav24kHz16bit/BASIC5000_0024.wav",
+    "source_sha256": "4ffebb9a2bb88f61d19797f2fd579bd6c36d01f4842d4d9df8fb7ca748faf130",
+    "wav": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/hann-references/jvs071.wav",
+    "wav_sha256": "b552fb2841cd806b79f4bf4eaa0479e9de462579a461f3ab47f01137890977d6",
+    "samples": 605738
+  },
+  {
+    "speaker": "jvs036",
+    "source": "artifacts/quality/assets/jvs/jvs_ver1/jvs036/nonpara30/wav24kHz16bit/BASIC5000_0022.wav",
+    "source_sha256": "e41a30a9389cd85fb044838a7c8be7b3598148ba9ed1b116f9f401a7af7c1798",
+    "wav": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/hann-references/jvs036.wav",
+    "wav_sha256": "6f605cfa694bb3dd1e61f8dd4aa1b8b17e3a4029a454c6dad498eaedca3e5401",
+    "samples": 272384
+  },
+  {
+    "speaker": "jvs061",
+    "source": "artifacts/quality/assets/jvs/jvs_ver1/jvs061/nonpara30/wav24kHz16bit/BASIC5000_0243.wav",
+    "source_sha256": "0b1b6772b9f5fd72cc98a036d383bc52b462ccfea600ee03ffb363ddd41834a8",
+    "wav": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/hann-references/jvs061.wav",
+    "wav_sha256": "ab1cf1d99d2b52fdac4b4c302efdb698890a6e4842a4406d6580392244797ab1",
+    "samples": 178188
+  },
+  {
+    "speaker": "jvs098",
+    "source": "artifacts/quality/assets/jvs/jvs_ver1/jvs098/nonpara30/wav24kHz16bit/BASIC5000_0271.wav",
+    "source_sha256": "87fe0b8b7d3354fa311ceb56141623df28c532fb8155848eec1beae176a0ead6",
+    "wav": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/hann-references/jvs098.wav",
+    "wav_sha256": "4a2065aa5c7c35001dc14e4615a2fefe25937dbe63740035cdd66cebde62a060",
+    "samples": 205166
+  },
+  {
+    "speaker": "jvs001",
+    "source": "artifacts/quality/assets/jvs/jvs_ver1/jvs001/nonpara30/wav24kHz16bit/BASIC5000_0025.wav",
+    "source_sha256": "33c185e54743f60641dfc7279737160656e497a1c82be10dd87205daad50f0e2",
+    "wav": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/hann-references/jvs001.wav",
+    "wav_sha256": "f4c10139eda2a7c61ac314de8ab59bb675ed34458a0bcf8e69adbc9a15e28585",
+    "samples": 194106
+  },
+  {
+    "speaker": "jvs002",
+    "source": "artifacts/quality/assets/jvs/jvs_ver1/jvs002/nonpara30/wav24kHz16bit/BASIC5000_0104.wav",
+    "source_sha256": "be7aab949b021551570650a61b6cc59843c967e4c7b57fd9ab3c91a5c732f26a",
+    "wav": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/hann-references/jvs002.wav",
+    "wav_sha256": "f11a706f3edadcf486b07b0d5f0d4390504048073d3bd861232919dec7328267",
+    "samples": 296262
+  }
+]

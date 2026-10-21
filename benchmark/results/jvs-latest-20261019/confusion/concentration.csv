@@ -1,0 +1,3 @@
+variant,net_excess,positive_excess,improvement_offset,speakers_worse,speakers_better,top2_excess,top5_excess
+mf,66,104,-38,18,12,34,67
+rf,85,126,-41,21,12,41,62

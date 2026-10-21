@@ -1,0 +1,14 @@
+{
+  "status": "complete",
+  "stage": "complete",
+  "pid": 539946,
+  "started_at": "2026-10-19T08:50:06Z",
+  "done": 1,
+  "total": 1,
+  "failed": 0,
+  "last_progress_at": "2026-10-19T09:05:22Z",
+  "eta_seconds": 0.0,
+  "heartbeat_at": "2026-10-19T09:05:22Z",
+  "exit_code": 0,
+  "finished_at": "2026-10-19T09:05:22Z"
+}

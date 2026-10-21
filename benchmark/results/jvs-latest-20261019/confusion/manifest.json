@@ -1,0 +1,77 @@
+{
+  "format": 1,
+  "selection": {
+    "affected": [
+      "jvs042",
+      "jvs049",
+      "jvs071",
+      "jvs036",
+      "jvs061",
+      "jvs098"
+    ],
+    "controls": [
+      "jvs001",
+      "jvs002"
+    ],
+    "speakers": [
+      "jvs042",
+      "jvs049",
+      "jvs071",
+      "jvs036",
+      "jvs061",
+      "jvs098",
+      "jvs001",
+      "jvs002"
+    ],
+    "criterion": "Top six speakers by summed MF/RF excess errors over official, plus first perfect male/female controls; fixed before intervention outputs"
+  },
+  "modes": [
+    "official_bf16_common",
+    "cpp_f16_kaiser_common",
+    "cpp_f16_hann_common",
+    "cpp_fp32_hann_common",
+    "official_fp32_common",
+    "cpp_fp32_hann_strict"
+  ],
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "texts_per_speaker": 5,
+  "variants": [
+    "mf",
+    "rf"
+  ],
+  "expected_generations": 2400,
+  "controls": "Official BF16 native duration frames and one shared FP32 noise per text/speaker/seed/variant",
+  "hann": "torchaudio defaults, mono 24kHz to 48kHz, saved float32 before loudness normalization",
+  "centroid": "Original 100 speaker held-out centroid; unchanged",
+  "files": {
+    "artifacts/benchmark/models/speech-mf/Irodori-TTS-866M-MF-v4.1-F32.gguf": "c98801aca55a977b6c08c23bbd8794352db03ffe51b05cc63d0aaeee55cd00ce",
+    "artifacts/benchmark/models/speech-mf-f16.gguf": "e8362f39548901f0f05558007cd949fa1fd22d14af64690441343364c2c1491c",
+    "artifacts/benchmark/models/speech-rf/Irodori-TTS-859M-v4.1-F32.gguf": "9ac382efe6d6bb4e590ef14d760cb5760f59ac07952dd13c1b99ef89bb3d1caa",
+    "artifacts/benchmark/models/speech-rf-f16.gguf": "8a738ac76cf5ae7cd7a9a18bfc2b6dc24212bb881319a5adfe67f882e9278165",
+    "artifacts/quality/assets/jvs-index.json": "35b58c1516b3b60eb9a371369693259683f9dc11121f82dbc30f2e3a8d4bcdc7",
+    "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/selection.json": "02ac68d7e187bc38f94ecd524a96672a2ca3a1c8d6ed3a49aae2e29b31d58eb5",
+    "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/build/speech-latest-quality": "c7630afcbbf9d9f4e72115a9b83f8f8a095860bfd7293ec85caa8a8f3dbc3d65",
+    "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/manifest.json": "9341fe121f2e19bf749e0b2882cea48e5064d5aa5c3ecf4cf00e1443333f70a8",
+    "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/results.sqlite3": "1cbf71becad2c2656699919f3eba069546e849085d4bc76bcc83626fe44d4c26",
+    "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/speaker-centroids.json": "97e13734b7adeb016edeb8ca222fa182158168884263d7f2e1ed2a139e96db64",
+    "benchmark/quality/common.py": "a13d42430243829976b8dea3e0a83245179f426f53e4ecd88eccc610b29af727",
+    "benchmark/quality/config.json": "29010ba2d1f72f3ae7e369502eec45890d42d5565386a841d661c8045357b6fc",
+    "benchmark/quality/jvs_latest/confusion.py": "83cdf0e131250bb54ff5159d506b2aff803e074f2b39e234ac1cda9c9d5860f8",
+    "benchmark/quality/jvs_latest/confusion_diagnostic.py": "745ec64e5c89bbb8b1b4e72c825bbafbf6cf0e0c817f681bcb2134295faa0063",
+    "benchmark/quality/jvs_latest/diagnostic_official.py": "2a6bd50610f6f71c41f15b5a42624721b4d6f48d1a4d7c81adfab1a6328f1af1",
+    "benchmark/quality/python_worker.py": "1e89dda28f3481754dab847cd3d177f80951e4922ea10ed95edc08ae3da4c013",
+    "benchmark/quality/report.py": "a8c11599b6e6483d7843f48ca6faeb3adbb2b465730fc87fee383c3e0baee9ff",
+    "benchmark/quality/sample_rate/run.py": "0f9883d2e24d41671d69a135ada94ce521f70e8a439f17d245373e1004956588",
+    "benchmark/quality/score_worker.py": "424c90092378830bcd035f1b3f05de60df3c7244f6c5504709cb15e3f7838d0c",
+    "benchmark/quality/worker.py": "bb2b5c5392ecc3efa54a93deec46d2c6b713d40cc1b0f0ffc57d8d289eb7f73a",
+    "models/codec/weights.pth": "db120339c5ee7eca1912cdf29bc612b947a0808e69c3cebfb4936b45a762c1d5",
+    "models/mf/model.safetensors": "a3f204b3ee06058f4e639a1af38408e7e3af5b6c75176897ecb8bfaaebb4fd54",
+    "models/rf/model.safetensors": "c85de88c01700cb53538e706f128ebcb1b8513ad21d7d0e75f58bc82cdbf89f6"
+  }
+}

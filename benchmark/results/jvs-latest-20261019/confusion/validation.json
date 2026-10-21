@@ -1,0 +1,8 @@
+{
+  "generations": 2400,
+  "scores": 2400,
+  "groups": 400,
+  "expected_modes": 6,
+  "common_noise_and_frames": true,
+  "natural_scores": 600
+}

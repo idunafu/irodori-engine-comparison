@@ -1,0 +1,16 @@
+{
+  "published_copies": 34,
+  "evaluation_decisions": 15000,
+  "controlled_decisions": 2400,
+  "controlled_groups": 400,
+  "natural_decisions": 600,
+  "five_seed_summaries_recomputed": true,
+  "confusion_counts_recomputed": true,
+  "controlled_summaries_recomputed": true,
+  "strict_fp32_predictions_identical": true,
+  "common_noise_and_frames": true,
+  "source_copies_verified": true,
+  "published_hashes_verified": true,
+  "environment_specific_paths_found": 0,
+  "original_artifacts_modified": false
+}

@@ -1,0 +1,219 @@
+{
+  "format": 1,
+  "measured_on": "2026-10-19",
+  "files": {
+    "evaluation/RESULTS.ja.md": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/report/LATEST.ja.md",
+      "source_sha256": "3d44859d4658ebd9acb42668ae9717a528af28ddfae9d3fdd68a5aa0dd3fd785",
+      "sha256": "3d44859d4658ebd9acb42668ae9717a528af28ddfae9d3fdd68a5aa0dd3fd785",
+      "bytes": 2546
+    },
+    "evaluation/summary.csv": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/report/summary.csv",
+      "source_sha256": "69070fc65400b8df70fa81786d376bedd896bcd3566fdd5315018306b8f1aa7b",
+      "sha256": "69070fc65400b8df70fa81786d376bedd896bcd3566fdd5315018306b8f1aa7b",
+      "bytes": 4277
+    },
+    "evaluation/per-seed.csv": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/report/per-seed.csv",
+      "source_sha256": "e11513e2fb27671dfe3c38fea1b7df1023e5d896df96ae0724b055a20c69b7a4",
+      "sha256": "e11513e2fb27671dfe3c38fea1b7df1023e5d896df96ae0724b055a20c69b7a4",
+      "bytes": 17827
+    },
+    "evaluation/comparisons.csv": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/report/comparisons.csv",
+      "source_sha256": "e4f4767b5eeac7a98b3be5a2f4c8576daa1ea9626bd57770bbcbe0255c369e4f",
+      "sha256": "e4f4767b5eeac7a98b3be5a2f4c8576daa1ea9626bd57770bbcbe0255c369e4f",
+      "bytes": 2136
+    },
+    "evaluation/latest-paired-differences.csv": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/report/latest-paired-differences.csv",
+      "source_sha256": "4bfa6e5560a608cf956a09ddaf04fcffacefa2769527b40ad056f46ff27b8088",
+      "sha256": "4bfa6e5560a608cf956a09ddaf04fcffacefa2769527b40ad056f46ff27b8088",
+      "bytes": 1294
+    },
+    "evaluation/coverage.json": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/report/coverage.json",
+      "source_sha256": "422d1a8f55d85ba633512ed572b3de6569565c8af80cee796644e51ec136a945",
+      "sha256": "422d1a8f55d85ba633512ed572b3de6569565c8af80cee796644e51ec136a945",
+      "bytes": 255
+    },
+    "evaluation/failures.csv": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/report/failures.csv",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "evaluation/manifest.json": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/manifest.json",
+      "source_sha256": "9341fe121f2e19bf749e0b2882cea48e5064d5aa5c3ecf4cf00e1443333f70a8",
+      "sha256": "46716c4112be40d163d158f7764b84d057e16086bafaa8680200d84e678205db",
+      "bytes": 282785,
+      "transformation": "Repository paths made relative; external Vulkan loader path replaced by ${Vulkan_LIBRARY}; all other values unchanged"
+    },
+    "evaluation/build-manifest.json": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/build-manifest.json",
+      "source_sha256": "280f2a12ac31d3aaecb5d93c5a1e808333a9d9603d3f9275bf9a8ec29aa812f5",
+      "sha256": "e197f17a78f47cb9d228b6ac3b0647e53a359aa30ef461272506b67308742b97",
+      "bytes": 1974,
+      "transformation": "Repository paths made relative; external Vulkan loader path replaced by ${Vulkan_LIBRARY}; all other values unchanged"
+    },
+    "evaluation/validation.json": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/validation.json",
+      "source_sha256": "9f6be23f2fa984e21f2d9bfa3ecf814eabbf726d8bd92bee248befc82045c0cb",
+      "sha256": "9f6be23f2fa984e21f2d9bfa3ecf814eabbf726d8bd92bee248befc82045c0cb",
+      "bytes": 582
+    },
+    "evaluation/status.json": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/status.json",
+      "source_sha256": "a845803f50afed49db0aef5fcd9ce10839b68bdc46bbd99c9c391520704093e3",
+      "sha256": "a845803f50afed49db0aef5fcd9ce10839b68bdc46bbd99c9c391520704093e3",
+      "bytes": 393
+    },
+    "confusion/RESULTS.ja.md": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/RESULTS.ja.md",
+      "source_sha256": "1a947e3a0149093fa1bc84d48bde209f17142bc39950b53941eee0494fa1c283",
+      "sha256": "1a947e3a0149093fa1bc84d48bde209f17142bc39950b53941eee0494fa1c283",
+      "bytes": 3808
+    },
+    "confusion/CONTROLLED.ja.md": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/CONTROLLED.ja.md",
+      "source_sha256": "104e33cd4ed900703997d730ef40a5e2d2eeb76f8262de336bd16b85afb080ce",
+      "sha256": "104e33cd4ed900703997d730ef40a5e2d2eeb76f8262de336bd16b85afb080ce",
+      "bytes": 6085
+    },
+    "confusion/analysis.json": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/analysis.json",
+      "source_sha256": "fd8371b080fcce9ef44355ada61d8df318e35e56b5d8591b5b416d0f213a4830",
+      "sha256": "909a718c489ef4b536ebeb29a353d191b3764570a220eaa631a7a169433fedbf",
+      "bytes": 3100,
+      "transformation": "Repository paths made relative; external Vulkan loader path replaced by ${Vulkan_LIBRARY}; all other values unchanged"
+    },
+    "confusion/manifest.json": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/manifest.json",
+      "source_sha256": "62ef79e2e97a49815f5576a87f7ff23fa66207cb9b55f337586019b6a0362e10",
+      "sha256": "54f209a742965b1d0aa64e449ef72cf2c0c25eb5d97e146675f5976224410773",
+      "bytes": 3986,
+      "transformation": "Repository paths made relative; external Vulkan loader path replaced by ${Vulkan_LIBRARY}; all other values unchanged"
+    },
+    "confusion/selection.json": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/selection.json",
+      "source_sha256": "02ac68d7e187bc38f94ecd524a96672a2ca3a1c8d6ed3a49aae2e29b31d58eb5",
+      "sha256": "02ac68d7e187bc38f94ecd524a96672a2ca3a1c8d6ed3a49aae2e29b31d58eb5",
+      "bytes": 442
+    },
+    "confusion/hann-references.json": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/hann-references.json",
+      "source_sha256": "5af83d09088bd30aeeb0010b3e5677f67ec6601f3e3658c715c4d328c787e8a9",
+      "sha256": "27702d53534ff8ac751686ff98ec772ff3867ea3330addb0ba81f23f8105d582",
+      "bytes": 3611,
+      "transformation": "Repository paths made relative; external Vulkan loader path replaced by ${Vulkan_LIBRARY}; all other values unchanged"
+    },
+    "confusion/validation.json": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/validation.json",
+      "source_sha256": "c4746610d9886e8a43ead940ff0593822f8805d6950133220b74aa8dac123a28",
+      "sha256": "c4746610d9886e8a43ead940ff0593822f8805d6950133220b74aa8dac123a28",
+      "bytes": 144
+    },
+    "confusion/status.json": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/status.json",
+      "source_sha256": "bb450b08c393fd69bdee277ffe846b31a96d50dde89b2e05f4e17f808da85b5d",
+      "sha256": "bb450b08c393fd69bdee277ffe846b31a96d50dde89b2e05f4e17f808da85b5d",
+      "bytes": 318
+    },
+    "confusion/decisions.csv": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/decisions.csv",
+      "source_sha256": "9adcf0fc25d150b1942d461e9ac2a9707aae2d17470bad3c75afd7e5afebd920",
+      "sha256": "9adcf0fc25d150b1942d461e9ac2a9707aae2d17470bad3c75afd7e5afebd920",
+      "bytes": 4256422
+    },
+    "confusion/summary.csv": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/summary.csv",
+      "source_sha256": "86d7f39cec6381ab77a9648a2f89d0b2fc8c1852fc48d27c01dc5f7bdafce2c4",
+      "sha256": "86d7f39cec6381ab77a9648a2f89d0b2fc8c1852fc48d27c01dc5f7bdafce2c4",
+      "bytes": 575
+    },
+    "confusion/per-speaker.csv": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/per-speaker.csv",
+      "source_sha256": "e4f14f1df7b8f525f82e4b4ae6522e80f6fa121fa0fcfd73a453d06064df1b43",
+      "sha256": "e4f14f1df7b8f525f82e4b4ae6522e80f6fa121fa0fcfd73a453d06064df1b43",
+      "bytes": 54690
+    },
+    "confusion/pairs-by-case.csv": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/pairs-by-case.csv",
+      "source_sha256": "77a7fdc91009089a2807af4f238ee6fd1613302316e0af03cdb5c658b38031aa",
+      "sha256": "77a7fdc91009089a2807af4f238ee6fd1613302316e0af03cdb5c658b38031aa",
+      "bytes": 11850
+    },
+    "confusion/paired-outcomes.csv": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/paired-outcomes.csv",
+      "source_sha256": "d960693e51c4daf8e8c259a7be406a2332cf3669709267b543679570c2cc5868",
+      "sha256": "d960693e51c4daf8e8c259a7be406a2332cf3669709267b543679570c2cc5868",
+      "bytes": 1017826
+    },
+    "confusion/paired-outcome-summary.csv": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/paired-outcome-summary.csv",
+      "source_sha256": "446a0822df102cadfacff250e36606667165ffdc18e6f89e11b776085779f4a6",
+      "sha256": "446a0822df102cadfacff250e36606667165ffdc18e6f89e11b776085779f4a6",
+      "bytes": 771
+    },
+    "confusion/error-margins.csv": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/error-margins.csv",
+      "source_sha256": "594ab26450ed020893e409dd133b789267526e445cadd9313a016606e91fad40",
+      "sha256": "594ab26450ed020893e409dd133b789267526e445cadd9313a016606e91fad40",
+      "bytes": 734
+    },
+    "confusion/speaker-gaps.csv": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/speaker-gaps.csv",
+      "source_sha256": "d6e69c92875ac0d457f7de09053d15cd54eac7ff5b666247031ffba2563d8f15",
+      "sha256": "d6e69c92875ac0d457f7de09053d15cd54eac7ff5b666247031ffba2563d8f15",
+      "bytes": 18657
+    },
+    "confusion/confusion-comparison.csv": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/confusion-comparison.csv",
+      "source_sha256": "ae093df4a730b4417050c051d23bcf8d5b1105f7561da39797543fcec94ba4d4",
+      "sha256": "ae093df4a730b4417050c051d23bcf8d5b1105f7561da39797543fcec94ba4d4",
+      "bytes": 5870
+    },
+    "confusion/concentration.csv": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/concentration.csv",
+      "source_sha256": "27c9911124919df1dc0fcd743a5e60b3e4774bb2104e1f95e59b4c2c0e36ee6e",
+      "sha256": "27c9911124919df1dc0fcd743a5e60b3e4774bb2104e1f95e59b4c2c0e36ee6e",
+      "bytes": 164
+    },
+    "confusion/natural-decisions.csv": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/natural-decisions.csv",
+      "source_sha256": "5eed87eb5e32a69fb5d2d41c164412e2e41ccb9014269863f1c6cbab6dd47166",
+      "sha256": "5eed87eb5e32a69fb5d2d41c164412e2e41ccb9014269863f1c6cbab6dd47166",
+      "bytes": 128929
+    },
+    "confusion/controlled-decisions.csv": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/controlled-decisions.csv",
+      "source_sha256": "2d33bc9a4e48df64db373f0bdd27326ad7a08de36c0ac1433ffa5bdd3f71b0e7",
+      "sha256": "05f2f1abc7a72bb5203658c1c9d6012f9d358c1cdd65483c96a4c698c8c9369b",
+      "bytes": 1069566,
+      "transformation": "Repository paths made relative; external Vulkan loader path replaced by ${Vulkan_LIBRARY}; all other values unchanged"
+    },
+    "confusion/controlled-summary.csv": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/controlled-summary.csv",
+      "source_sha256": "623c6a29d9ab5fe7f3666462fd524efd167a87907f02b8daa7eed1e8b4d188e2",
+      "sha256": "623c6a29d9ab5fe7f3666462fd524efd167a87907f02b8daa7eed1e8b4d188e2",
+      "bytes": 3002
+    },
+    "confusion/controlled-per-speaker.csv": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/controlled-per-speaker.csv",
+      "source_sha256": "f045ef0aef3fda11baf9a0e6bbcf30a9e7ca18643aeced364974a75cf4af658e",
+      "sha256": "f045ef0aef3fda11baf9a0e6bbcf30a9e7ca18643aeced364974a75cf4af658e",
+      "bytes": 4781
+    },
+    "confusion/controlled-differences.csv": {
+      "source": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/analysis/confusion/controlled-differences.csv",
+      "source_sha256": "ce49535305fa75deebe8ec74137a707f0454e665c8898baeed5cb3c5343850fa",
+      "sha256": "ce49535305fa75deebe8ec74137a707f0454e665c8898baeed5cb3c5343850fa",
+      "bytes": 5591
+    }
+  },
+  "path_base": "repository root",
+  "external_paths": "${Vulkan_LIBRARY} denotes the runtime Vulkan loader; its installation directory is not published",
+  "code_note": "Measured code hashes are retained in the original manifests. The published run.py discovers the Vulkan loader using scripts/native_toolchain.py instead of a fixed system path. Measurement/scoring outputs are unchanged."
+}

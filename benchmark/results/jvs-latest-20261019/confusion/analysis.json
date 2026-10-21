@@ -1,0 +1,119 @@
+{
+  "source_run": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd",
+  "rows": 15000,
+  "source_sha256": {
+    "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/results.sqlite3": "1cbf71becad2c2656699919f3eba069546e849085d4bc76bcc83626fe44d4c26",
+    "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/speaker-centroids.json": "97e13734b7adeb016edeb8ca222fa182158168884263d7f2e1ed2a139e96db64",
+    "artifacts/quality/assets/jvs-index.json": "35b58c1516b3b60eb9a371369693259683f9dc11121f82dbc30f2e3a8d4bcdc7",
+    "benchmark/quality/jvs_latest/confusion.py": "83cdf0e131250bb54ff5159d506b2aff803e074f2b39e234ac1cda9c9d5860f8"
+  },
+  "selection": {
+    "affected": [
+      "jvs042",
+      "jvs049",
+      "jvs071",
+      "jvs036",
+      "jvs061",
+      "jvs098"
+    ],
+    "controls": [
+      "jvs001",
+      "jvs002"
+    ],
+    "speakers": [
+      "jvs042",
+      "jvs049",
+      "jvs071",
+      "jvs036",
+      "jvs061",
+      "jvs098",
+      "jvs001",
+      "jvs002"
+    ],
+    "criterion": "Top six speakers by summed MF/RF excess errors over official, plus first perfect male/female controls; fixed before intervention outputs"
+  },
+  "concentration": [
+    {
+      "variant": "mf",
+      "net_excess": 66,
+      "positive_excess": 104,
+      "improvement_offset": -38,
+      "speakers_worse": 18,
+      "speakers_better": 12,
+      "top2_excess": 34,
+      "top5_excess": 67
+    },
+    {
+      "variant": "rf",
+      "net_excess": 85,
+      "positive_excess": 126,
+      "improvement_offset": -41,
+      "speakers_worse": 21,
+      "speakers_better": 12,
+      "top2_excess": 41,
+      "top5_excess": 62
+    }
+  ],
+  "summary": [
+    {
+      "case": "official-mf-bf16",
+      "takes": 2500,
+      "correct": 2216,
+      "top1": 0.8864,
+      "top3": 0.9756,
+      "top5": 0.9872,
+      "true_similarity": 0.7644803298374514,
+      "mean_margin": 0.08908211900858387
+    },
+    {
+      "case": "official-rf-bf16",
+      "takes": 2500,
+      "correct": 2224,
+      "top1": 0.8896,
+      "top3": 0.9744,
+      "top5": 0.9852,
+      "true_similarity": 0.7683894169380118,
+      "mean_margin": 0.08418610648291501
+    },
+    {
+      "case": "previous-mf-f16",
+      "takes": 2500,
+      "correct": 2113,
+      "top1": 0.8452,
+      "top3": 0.9504,
+      "top5": 0.978,
+      "true_similarity": 0.7565707864616502,
+      "mean_margin": 0.07761190349496025
+    },
+    {
+      "case": "previous-rf-f16",
+      "takes": 2500,
+      "correct": 2107,
+      "top1": 0.8428,
+      "top3": 0.946,
+      "top5": 0.9684,
+      "true_similarity": 0.7591776223341389,
+      "mean_margin": 0.07337413218464278
+    },
+    {
+      "case": "speech-mf-f16",
+      "takes": 2500,
+      "correct": 2150,
+      "top1": 0.86,
+      "top3": 0.958,
+      "top5": 0.978,
+      "true_similarity": 0.7648918120082764,
+      "mean_margin": 0.0784591348498746
+    },
+    {
+      "case": "speech-rf-f16",
+      "takes": 2500,
+      "correct": 2139,
+      "top1": 0.8556,
+      "top3": 0.946,
+      "top5": 0.9664,
+      "true_similarity": 0.7674307518274103,
+      "mean_margin": 0.07263613349145498
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "source_commit": "eacabcd891fefc2c3de3ca2479ff84e60f2679aa",
+  "ggml_commit": "a655cf6910770404213bc338e622cd82b08ca277",
+  "flags": [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DBUILD_SHARED_LIBS=OFF",
+    "-DGGML_VULKAN=ON",
+    "-DGGML_CUDA=OFF",
+    "-DGGML_METAL=OFF",
+    "-DGGML_NATIVE=ON",
+    "-DGGML_OPENMP=ON",
+    "-DVulkan_LIBRARY=${Vulkan_LIBRARY}",
+    "-DCMAKE_PREFIX_PATH=toolchains/1.4.357.0/x86_64",
+    "-DVulkan_INCLUDE_DIR=toolchains/1.4.357.0/x86_64/include",
+    "-DVulkan_GLSLC_EXECUTABLE=toolchains/1.4.357.0/x86_64/bin/glslc",
+    "-DVulkan_GLSLANG_VALIDATOR_EXECUTABLE=toolchains/1.4.357.0/x86_64/bin/glslangValidator"
+  ],
+  "binary": "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/build/speech-latest-quality",
+  "binary_sha256": "c7630afcbbf9d9f4e72115a9b83f8f8a095860bfd7293ec85caa8a8f3dbc3d65",
+  "cmake_cache_sha256": "dc381e37200128a191cae7913867a23e094a270380fdeded39ec10c710500466",
+  "built_at": "2026-10-19T07:17:24Z",
+  "commands": [
+    [
+      "cmake",
+      "-S",
+      "benchmark/quality/jvs_latest",
+      "-B",
+      "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/build",
+      "-DSPEECH_SOURCE=artifacts/quality/source/speech-eacabcd891fefc2c3de3ca2479ff84e60f2679aa",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DBUILD_SHARED_LIBS=OFF",
+      "-DGGML_VULKAN=ON",
+      "-DGGML_CUDA=OFF",
+      "-DGGML_METAL=OFF",
+      "-DGGML_NATIVE=ON",
+      "-DGGML_OPENMP=ON",
+      "-DVulkan_LIBRARY=${Vulkan_LIBRARY}",
+      "-DCMAKE_PREFIX_PATH=toolchains/1.4.357.0/x86_64",
+      "-DVulkan_INCLUDE_DIR=toolchains/1.4.357.0/x86_64/include",
+      "-DVulkan_GLSLC_EXECUTABLE=toolchains/1.4.357.0/x86_64/bin/glslc",
+      "-DVulkan_GLSLANG_VALIDATOR_EXECUTABLE=toolchains/1.4.357.0/x86_64/bin/glslangValidator"
+    ],
+    [
+      "cmake",
+      "--build",
+      "artifacts/quality/runs/20261019-jvs-one-latest-eacabcd/build",
+      "--target",
+      "speech-latest-quality",
+      "--parallel",
+      "8"
+    ]
+  ]
+}

@@ -1,0 +1,17 @@
+dataset,case,baseline,mode,metric,comparison,difference,low,high,clusters
+jvs,previous-mf-f16,official-mf-bf16,native,camplus_cosine,vs_official,-0.007909543375801298,-0.012169866404375035,-0.0038231578810767625,100
+jvs,previous-mf-f16,official-mf-bf16,native,generation_failure_rate,vs_official,0.0,0.0,0.0,100
+jvs,previous-mf-f16,official-mf-bf16,native,speaker_top1,vs_official,-0.041200000000000014,-0.07640000000000002,-0.00880000000000003,100
+jvs,previous-mf-f16,official-mf-bf16,native,whisper_cer,vs_official,-9.794850763271412e-05,-0.0010238745044429405,0.0008298826611984267,100
+jvs,previous-rf-f16,official-rf-bf16,native,camplus_cosine,vs_official,-0.009211794603873003,-0.013807912181408342,-0.004692254475165445,100
+jvs,previous-rf-f16,official-rf-bf16,native,generation_failure_rate,vs_official,0.0,0.0,0.0,100
+jvs,previous-rf-f16,official-rf-bf16,native,speaker_top1,vs_official,-0.04679999999999995,-0.08119999999999994,-0.014790000000000091,100
+jvs,previous-rf-f16,official-rf-bf16,native,whisper_cer,vs_official,-7.709820004555765e-05,-0.0005621265436318033,0.00037578313966736223,100
+jvs,speech-mf-f16,official-mf-bf16,native,camplus_cosine,vs_official,0.0004114821708248728,-0.003530969563919023,0.004081341933687002,100
+jvs,speech-mf-f16,official-mf-bf16,native,generation_failure_rate,vs_official,0.0,0.0,0.0,100
+jvs,speech-mf-f16,official-mf-bf16,native,speaker_top1,vs_official,-0.02639999999999998,-0.055600000000000094,0.00040000000000006697,100
+jvs,speech-mf-f16,official-mf-bf16,native,whisper_cer,vs_official,-9.295967190704399e-05,-0.0010448718614718344,0.0008372232399179829,100
+jvs,speech-rf-f16,official-rf-bf16,native,camplus_cosine,vs_official,-0.0009586651106016086,-0.005209934335141234,0.0035166319301983325,100
+jvs,speech-rf-f16,official-rf-bf16,native,generation_failure_rate,vs_official,0.0,0.0,0.0,100
+jvs,speech-rf-f16,official-rf-bf16,native,speaker_top1,vs_official,-0.03399999999999992,-0.06440000000000001,-0.0039900000000000595,100
+jvs,speech-rf-f16,official-rf-bf16,native,whisper_cer,vs_official,-0.0001274003189792594,-0.000667177170198227,0.00040864593301436213,100

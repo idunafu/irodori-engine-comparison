@@ -1,0 +1,17 @@
+{
+  "status": "complete",
+  "pid": 527545,
+  "started": "2026-10-19T07:16:36Z",
+  "stage": "complete",
+  "phase_total": 0,
+  "phase_done": 0,
+  "phase_failed": 0,
+  "last_progress_at": "2026-10-19T07:48:22Z",
+  "exit_code": 0,
+  "finished_at": "2026-10-19T07:48:24Z",
+  "new_generations": {
+    "ok": 5000
+  },
+  "heartbeat_at": "2026-10-19T07:48:24Z",
+  "estimated_remaining_seconds": null
+}
