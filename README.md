@@ -89,3 +89,7 @@ benchmark/.venv/bin/python benchmark/validate_results.py
 参照音声を差し替える場合は[benchmark/config.json](benchmark/config.json)の`reference`にリポジトリルートからの相対パスを指定します。掲載結果と同じ入力での追試には元の参照音声が必要です。
 
 モデル・環境・ビルド・ログ・生データ・生成音声はGit管理外へ保存し、集計CSV・グラフを[benchmark/results/](benchmark/results/)に出力します。個別実装の起動、途中再開、出力ファイル、speech.cpp A/Bの実行方法は[詳細手順](docs/usage.ja.md)を参照してください。
+
+## 第三者のライセンス
+
+品質評価で使用するspeech-benchの日本語20文・採点・音声解析コードの利用範囲とMITライセンス全文は、[第三者の著作権・ライセンス表示](THIRD_PARTY_NOTICES.md)に記載しています。各エンジン・モデル・コーパスは、それぞれのライセンス・利用条件に従います。

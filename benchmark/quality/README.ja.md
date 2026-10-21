@@ -75,3 +75,5 @@ bash benchmark/quality/run.sh --resume --retry-failed --detach
 Gitには評価コード・設定と、`benchmark/results/quality-20261019/` のレポート・主要CSV・検証記録を残します。音声、モデル、SQLite、詳細JSONL、ログ、派生ソース・バイナリは既存の `artifacts/` 配下に保持し、コーパスの `jvs_ver1.zip` と `wav_tsukuyomi.zip` も追跡しません。公開ファイルのローカルパスはリポジトリルートからの相対表記にし、`provenance.json` に保存元、元ファイルの `source_sha256`、公開ファイルの `sha256` を記録しています。追加診断のソース保存先と再集計上の制約は結果レポートを参照してください。
 
 参照：[JKYB-Parakeet](https://github.com/Parakeet-Inc/Joyo-Kanji-Yomi-Benchmark-Parakeet-Edition)、[公式MF評価](https://huggingface.co/Aratako/Irodori-TTS-v4.1-Small-MF)、[公式JVS手順](https://huggingface.co/Aratako/Irodori-TTS-v4-Small/blob/main/VOICE_CLONING_BENCHMARK.md)、[speech-bench](https://github.com/nyosegawa/speech-bench)。具体的なrevisionはconfigと各runのmanifestに保存します。
+
+speech-benchの日本語20文と採点・音声解析コードはMITライセンスで利用しています。著作権表示、許諾文の全文、使用コミット、派生ファイルの変更内容は[第三者の著作権・ライセンス表示](../../THIRD_PARTY_NOTICES.md)を参照してください。取得先のLICENSEも保持し、文章を含む結果や派生ソースの再配布時にはライセンス表示を添付してください。
